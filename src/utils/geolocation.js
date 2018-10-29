@@ -1,9 +1,11 @@
 import { geolocationParams } from '../constants';
 
-export default getGeolocation = (onLocationSuccess, onLocationError) => {
+const getGeolocation = (onLocationSuccess, onLocationError) => {
   navigator.geolocation.getCurrentPosition(
     onLocationSuccess,
     onLocationError,
     geolocationParams,
   );
-}
+};
+
+export default getGeolocation;

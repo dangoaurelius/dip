@@ -1,6 +1,9 @@
+/* eslint-disable no-underscore-dangle  */
+/* eslint-disable no-else-return */
 import React, { Component } from 'react';
 import {
   TouchableOpacity,
+  Dimensions,
   Platform,
   WebView,
   Image,
@@ -12,8 +15,8 @@ import {
   Speech,
   getMapURL,
   getGeolocation,
-  requestGeolocationPermission,
 } from 'AppUtils';
+
 import {
   numbers,
   auditory,
@@ -22,6 +25,7 @@ import {
 
 import styles from './styles';
 
+const { height, width } = Dimensions.get('screen');
 const microphone = require('../../../assets/microphone.jpg');
 
 let timeout;
@@ -37,8 +41,9 @@ export default class App extends Component {
     this.state = {
       results: [],
       partialResults: [],
-      words: []
-    }
+      words: [],
+      directionViewState: 0, // 0 - hide, 1 - loding (on geolocaiton retriving), 3 - show web view
+    };
 
     // Voice.onSpeechStart = this.onSpeechStartHandler.bind(this);
     // Voice.onSpeechEnd = this.onSpeechEndHandler.bind(this);
@@ -54,7 +59,7 @@ export default class App extends Component {
   onSpeechEnd = () => {
     const words = this.state.results[0].split(/ |-/);
     this.setState({ words });
-    this.getInformation(words)
+    this.getInformation(words);
   }
 
   isNumber = (item) => {
@@ -79,22 +84,23 @@ export default class App extends Component {
     let audit = mainWords.filter(item => item.type === 'auditory');
     if (audit.length > 0 && audit.length < 2) {
     let numbers = 0;
-      number = mainWords.filter(item => item.type === 'number');
+      const number = mainWords.filter(item => item.type === 'number');
       if (number.length > 0) {
         if (number.length > 1) {
-          auditoryId = audit[0].index;
+          const auditoryId = audit[0].index;
           let numberId = null;
           number.map((item, index) => {
             numberId = Math.abs(auditoryId - item.index) < numberId ? index : numberId;
           });
           if (auditory[number[numberId].item]) {
-            Speech.speak(auditory[number[numberId].item].text)
+            Speech.speak(auditory[number[numberId].item].text);
           } else {
             Speech.speak(`Аудитория ${number[numberId].item} не найдена`);
           }
         } else {
           if (auditory[number[0].item]) {
-            Speech.speak(auditory[number[0].item].text)
+            Speech.speak(auditory[number[0].item].text);
+            this._onAuditoryRecognised(auditory[number[0].item].housing);
           } else {
             Speech.speak(`Аудитория ${number[0].item} не найдена`);
           }
@@ -106,6 +112,20 @@ export default class App extends Component {
     } else {
       Speech.speak('Укажите адиторию и номер аудитории, которую вы ищите')
     }
+  }
+
+  genNavigationHTML = (sourceURL) => {
+    return `
+      <iframe
+        src="${sourceURL}"
+        width="${width}"
+        height="${height}"
+        frameborder="0"
+        style="border: 0"
+        allowfullscreen
+      >
+      </iframe>
+    `;
   }
 
   onSpeechResults(e) {
@@ -126,7 +146,7 @@ export default class App extends Component {
   silentVoiceStop = () => {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
-      this._stopRecognizing()
+      this._stopRecognizing();
     }, 3000);
   }
 
@@ -153,39 +173,39 @@ export default class App extends Component {
     }
   }
 
-  _getCurrentGeolocetion = () => {
+  _getCurrentGeolocation = () => {
     getGeolocation(this._onLocationSuccess, this._onLocationError);
   }
 
-  _onLocationSuccess = ({ coords }) => {
-    // TODO: get desination from voice recognition
-    const { housing_3: { destination } } = destinations;
-
-    const mapURL = getMapURL(
-      coords,
-      destination,
+  _onAuditoryRecognised = (auditoryNumber) => {
+    console.warn('asdfasdf', auditoryNumber);
+    const destination = destinations[auditoryNumber].desination;
+    this.setState(
+      {
+        housingDestination: destination,
+      },
+      this._getCurrentGeolocation,
     );
+  }
 
-    this.setState({
-      mapURL,
-    });
+  _onLocationSuccess = ({ coords }) => {
+    const { housingDestination } = this.state;
+    // TODO: get desination from voice recognition
+    const { destination } = destinations[2];
+
+    const mapURL = getMapURL(coords, destination);
+    this.setState({ mapURL });
   }
 
   _onLocationError = ({ code }) => {
     if (code === 3) { // if timed out({app_folder}->src->constants.geolocationParams.timeout) then start again.
-      this._getCurrentGeolocetion();
+      this._getCurrentGeolocation();
     }
   }
 
   render() {
     const { started, mapURL } = this.state;
-    if (mapURL) {
-      return (
-        <WebView
-          source={{ html: `<iframe src="${mapURL}" width="100%" height="100%" frameborder="0" style="border: 0" allowfullscreen></iframe>` }}
-        />
-      );
-    }
+
     return (
       <View style={styles.container}>
         <View style={styles.viewMicrophoneImage}>
@@ -210,6 +230,13 @@ export default class App extends Component {
             </Text>
           }
         </View>
+        {
+          mapURL && (
+            <WebView
+              source={{ html: this.genNavigationHTML(mapURL) }}
+            />
+          )
+        }
       </View>
     );
   }

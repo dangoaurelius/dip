@@ -3,7 +3,7 @@ import {
   GOOGLE_MAPS_URL,
 } from '../constants';
 
-export default getMapURL = (origin, destination) => {
+const getMapURL = (origin, destination) => {
   const { mode, api_key } = MAP_SETTINGS;
 
   const keyParam = `key=${api_key}`;
@@ -20,5 +20,7 @@ export default getMapURL = (origin, destination) => {
     ? `destination=${destination}`
     : `destination=${destination.latitude},${destination.longitude}`;
 
-  return `${GOOGLE_MAPS_URL}&${keyParam}&${originParams}&${destParam}&${modeParam}`;
-}
+  return `${GOOGLE_MAPS_URL}?${keyParam}&${originParam}&${destParam}&${modeParam}`;
+};
+
+export default getMapURL;
