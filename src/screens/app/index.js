@@ -1,19 +1,28 @@
 import React, { Component } from 'react';
 import {
+  TouchableOpacity,
   Platform,
-  StyleSheet,
+  WebView,
+  Image,
   Text,
   View,
-  Image,
-  Dimensions,
-  TouchableOpacity
 } from 'react-native';
 import Voice from 'react-native-voice';
-import { Speech } from 'AppUtils';
-import { numbers, auditory } from '../../constants';
+import {
+  Speech,
+  getMapURL,
+  getGeolocation,
+  requestGeolocationPermission,
+} from 'AppUtils';
+import {
+  numbers,
+  auditory,
+  destinations,
+} from '../../constants';
+
+import styles from './styles';
 
 const microphone = require('../../../assets/microphone.jpg');
-const { width, height } = Dimensions.get('window');
 
 let timeout;
 
@@ -30,7 +39,7 @@ export default class App extends Component {
       partialResults: [],
       words: []
     }
-    
+
     // Voice.onSpeechStart = this.onSpeechStartHandler.bind(this);
     // Voice.onSpeechEnd = this.onSpeechEndHandler.bind(this);
     Voice.onSpeechResults = this.onSpeechResults.bind(this);
@@ -96,7 +105,7 @@ export default class App extends Component {
       return;
     } else {
       Speech.speak('Укажите адиторию и номер аудитории, которую вы ищите')
-    }    
+    }
   }
 
   onSpeechResults(e) {
@@ -128,7 +137,7 @@ export default class App extends Component {
       partialResults: [],
       words: []
     });
-    try { 
+    try {
       await this._stopRecognizing();
       await Voice.start('ru');
     } catch (e) {
@@ -144,8 +153,39 @@ export default class App extends Component {
     }
   }
 
+  _getCurrentGeolocetion = () => {
+    getGeolocation(this._onLocationSuccess, this._onLocationError);
+  }
+
+  _onLocationSuccess = ({ coords }) => {
+    // TODO: get desination from voice recognition
+    const { housing_3: { destination } } = destinations;
+
+    const mapURL = getMapURL(
+      coords,
+      destination,
+    );
+
+    this.setState({
+      mapURL,
+    });
+  }
+
+  _onLocationError = ({ code }) => {
+    if (code === 3) { // if timed out({app_folder}->src->constants.geolocationParams.timeout) then start again.
+      this._getCurrentGeolocetion();
+    }
+  }
+
   render() {
-    const { started } = this.state;
+    const { started, mapURL } = this.state;
+    if (mapURL) {
+      return (
+        <WebView
+          source={{ html: `<iframe src="${mapURL}" width="100%" height="100%" frameborder="0" style="border: 0" allowfullscreen></iframe>` }}
+        />
+      );
+    }
     return (
       <View style={styles.container}>
         <View style={styles.viewMicrophoneImage}>
@@ -174,57 +214,3 @@ export default class App extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    ...Platform.select({
-      ios: {
-        marginTop: 25,
-      }
-    })
-  },
-  viewMicrophoneImage: {
-    width,
-    height: height / 4,
-    marginTop: 30,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  microphoneImage: {
-    height: height / 5,
-    width: height / 5,
-    ...Platform.select({
-      ios: {
-        borderRadius: ( height / 5 ) / 2,
-      },
-      android: {
-        borderRadius: height / 5
-      }
-    })
-  },
-  touchableOpacityMicrophoneImage: {
-    borderWidth: 4,
-    height: height / 4,
-    width: height / 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-    ...Platform.select({
-      ios: {
-        borderRadius: ( height / 4 ) / 2,
-      },
-      android: {
-        borderRadius: height / 4
-      }
-    })
-  },
-  viewText: {
-    width,
-    marginTop: 30,
-    paddingHorizontal: 20
-  },
-  textRecognize: {
-    fontSize: 20,
-    fontWeight: '500'
-  },
-});

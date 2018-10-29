@@ -1278,6 +1278,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.VoiceNavigation;
 				PRODUCT_NAME = VoiceNavigation;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1297,6 +1298,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.VoiceNavigation;
 				PRODUCT_NAME = VoiceNavigation;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1482,7 +1484,7 @@
 				00E356F71AD99517003FC87E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "VoiceNavigation" */ = {
 			isa = XCConfigurationList;
@@ -1491,7 +1493,7 @@
 				13B07F951A680F5B00A75B9A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "VoiceNavigation-tvOS" */ = {
 			isa = XCConfigurationList;
@@ -1500,7 +1502,7 @@
 				2D02E4981E0B4A5E006451C7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "VoiceNavigation-tvOSTests" */ = {
 			isa = XCConfigurationList;
@@ -1509,7 +1511,7 @@
 				2D02E49A1E0B4A5E006451C7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "VoiceNavigation" */ = {
 			isa = XCConfigurationList;
@@ -1518,7 +1520,7 @@
 				83CBBA211A601CBA00E9B192 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
