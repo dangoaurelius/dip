@@ -4,14 +4,14 @@ import {
 } from '../constants';
 
 const getMapURL = (origin, destination) => {
-  const { mode, api_key } = MAP_SETTINGS;
+  const { mode, apiKey } = MAP_SETTINGS;
 
-  const keyParam = `key=${api_key}`;
+  const keyParam = `key=${apiKey}`;
   const modeParam = `mode=${mode}`;
 
   const isOriginString = typeof origin === 'string';
   const isDestString = typeof destination === 'string';
-
+  console.log(origin, destination);
   const originParam = isOriginString
     ? `origin=${origin}`
     : `origin=${origin.latitude},${origin.longitude}`;

@@ -1,32 +1,41 @@
 /* eslint-disable no-underscore-dangle  */
 /* eslint-disable no-else-return */
+import MapViewDirections from 'react-native-maps-directions';
 import React, { Component } from 'react';
+import Voice from 'react-native-voice';
 import {
   TouchableOpacity,
-  Dimensions,
   Platform,
-  WebView,
   Image,
   Text,
   View,
 } from 'react-native';
-import Voice from 'react-native-voice';
+import MapView, {
+  Marker,
+  PROVIDER_GOOGLE,
+} from 'react-native-maps';
+
 import {
   Speech,
-  getMapURL,
   getGeolocation,
+  getInitialRegion,
 } from 'AppUtils';
 
 import {
   numbers,
   auditory,
   destinations,
+  GOOGLE_API_KEY,
 } from '../../constants';
 
 import styles from './styles';
 
-const { height, width } = Dimensions.get('screen');
 const microphone = require('../../../assets/microphone.jpg');
+
+const isAndroid = Platform.OS === 'android';
+const MAP_PROFIDER = isAndroid ? PROVIDER_GOOGLE : undefined;
+const origin = { latitude: 37.3318456, longitude: -122.0296002 };
+const destination = { latitude: 37.771707, longitude: -122.4053769 };
 
 let timeout;
 
@@ -114,20 +123,6 @@ export default class App extends Component {
     }
   }
 
-  genNavigationHTML = (sourceURL) => {
-    return `
-      <iframe
-        src="${sourceURL}"
-        width="${width}"
-        height="${height}"
-        frameborder="0"
-        style="border: 0"
-        allowfullscreen
-      >
-      </iframe>
-    `;
-  }
-
   onSpeechResults(e) {
     this.setState({
       results: e.value,
@@ -155,21 +150,21 @@ export default class App extends Component {
       started: true,
       results: [],
       partialResults: [],
-      words: []
+      words: [],
     });
     try {
       await this._stopRecognizing();
       await Voice.start('ru');
-    } catch (e) {
-      console.error(e);
+    } catch (errorEvent) {
+      console.error(errorEvent);
     }
   }
 
   _stopRecognizing = async (e) => {
     try {
       await Voice.stop();
-    } catch (e) {
-      console.error(e);
+    } catch (errorEvent) {
+      console.error(errorEvent);
     }
   }
 
@@ -178,38 +173,60 @@ export default class App extends Component {
   }
 
   _onAuditoryRecognised = (auditoryNumber) => {
-    console.warn('asdfasdf', auditoryNumber);
-    const destination = destinations[auditoryNumber].desination;
+    const { housingDestination } = destinations[auditoryNumber];
     this.setState(
-      {
-        housingDestination: destination,
-      },
+      { housingDestination },
       this._getCurrentGeolocation,
     );
   }
 
   _onLocationSuccess = ({ coords }) => {
     const { housingDestination } = this.state;
-    // TODO: get desination from voice recognition
-    const { destination } = destinations[2];
-
-    const mapURL = getMapURL(coords, destination);
-    this.setState({ mapURL });
+    const initialRegion = getInitialRegion(coords);
+    this.setState({
+      initialRegion,
+      userCoords: coords,
+    });
   }
 
-  _onLocationError = ({ code }) => {
-    if (code === 3) { // if timed out({app_folder}->src->constants.geolocationParams.timeout) then start again.
+  _onLocationError = (error) => {
+    if (error.code === 3) { // if timed out({app_folder}->src->constants.geolocationParams.timeout) then start again.
       this._getCurrentGeolocation();
     }
   }
 
+  renderMapView = () => {
+    const { initialRegion, userCoords } = this.state;
+
+    return (
+      <View style={styles.mapContainer}>
+        <MapView
+          provider={MAP_PROFIDER}
+          style={styles.map}
+          initialRegion={initialRegion}
+        >
+            <MapViewDirections
+              origin={origin}
+              destination={destination}
+              apikey={GOOGLE_API_KEY}
+            />
+            <Marker
+              coordinate={userCoords}
+              title={'User Marker'}
+              description={'Description'}
+            />
+          </MapView>
+      </View>
+    );
+  }
+
   render() {
-    const { started, mapURL } = this.state;
+    const { started, userCoords } = this.state;
 
     return (
       <View style={styles.container}>
         <View style={styles.viewMicrophoneImage}>
-          <TouchableOpacity onPress={() => this.getInformation(["У","меня","вопрос","Я","ищу","10","аудиторию"])} style={styles.touchableOpacityMicrophoneImage}>
+          <TouchableOpacity onPress={() => this.getInformation(['У', 'меня', 'вопрос', 'Я', 'ищу', '10', 'аудиторию'])} style={styles.touchableOpacityMicrophoneImage}>
           {/* <TouchableOpacity onPress={this._startRecognizing} style={styles.touchableOpacityMicrophoneImage}> */}
             <Image source={microphone} style={styles.microphoneImage} resizeMode="contain" />
           </TouchableOpacity>
@@ -230,13 +247,7 @@ export default class App extends Component {
             </Text>
           }
         </View>
-        {
-          mapURL && (
-            <WebView
-              source={{ html: this.genNavigationHTML(mapURL) }}
-            />
-          )
-        }
+        {userCoords && (this.renderMapView())}
       </View>
     );
   }

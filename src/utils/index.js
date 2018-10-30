@@ -2,14 +2,13 @@
  * @providesModule AppUtils
  */
 
- import Speech from './Speech';
- import getMapURL from './mapURL';
- import getGeolocation from './geolocation';
- import { requestGeolocationPermission } from './permissions';
+import Speech from './Speech';
+import getMapURL from './mapURL';
+import getGeolocation, { getInitialRegion } from './geolocation';
 
- export {
-   Speech,
-   getMapURL,
-   getGeolocation,
-   requestGeolocationPermission,
- };
+export {
+  Speech,
+  getMapURL,
+  getGeolocation,
+  getInitialRegion,
+};

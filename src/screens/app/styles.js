@@ -12,27 +12,27 @@ const styles = StyleSheet.create({
     ...Platform.select({
       ios: {
         marginTop: 25,
-      }
-    })
+      },
+    }),
   },
   viewMicrophoneImage: {
     width,
     height: height / 4,
     marginTop: 30,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   microphoneImage: {
     height: height / 5,
     width: height / 5,
     ...Platform.select({
       ios: {
-        borderRadius: ( height / 5 ) / 2,
+        borderRadius: (height / 5) / 2,
       },
       android: {
-        borderRadius: height / 5
-      }
-    })
+        borderRadius: height / 5,
+      },
+    }),
   },
   touchableOpacityMicrophoneImage: {
     borderWidth: 4,
@@ -42,21 +42,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     ...Platform.select({
       ios: {
-        borderRadius: ( height / 4 ) / 2,
+        borderRadius: (height / 4) / 2,
       },
       android: {
-        borderRadius: height / 4
-      }
-    })
+        borderRadius: height / 4,
+      },
+    }),
   },
   viewText: {
     width,
     marginTop: 30,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   textRecognize: {
     fontSize: 20,
-    fontWeight: '500'
+    fontWeight: '500',
+  },
+  mapContainer: {
+    flex: 1,
+  },
+  map: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 });
 

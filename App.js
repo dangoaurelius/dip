@@ -15,7 +15,7 @@ export default class App extends Component {
     this.state = {
 
     }
-    
+
     // Voice.onSpeechStart = this.onSpeechStartHandler.bind(this);
     // Voice.onSpeechEnd = this.onSpeechEndHandler.bind(this);
     Voice.onSpeechResults = this.onSpeechResults.bind(this);
