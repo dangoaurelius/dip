@@ -401,7 +401,7 @@
 		8425E94B21888F5500801F00 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		8425E94D21888F5E00801F00 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		8425E94F21888F6900801F00 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		84BEA1CB21883EC40071DF9E /* location_spoof.gpx */ = {isa = PBXFileReference; lastKnownFileType = text; name = location_spoof.gpx; path = ../src/constants/location_spoof.gpx; sourceTree = "<group>"; };
+		84BEA1CB21883EC40071DF9E /* location_spoof_outside_area.gpx */ = {isa = PBXFileReference; lastKnownFileType = text; name = location_spoof_outside_area.gpx; path = ../src/constants/location_spoof_outside_area.gpx; sourceTree = "<group>"; };
 		84DC81212188828C002BAAB4 /* GoogleMapsBase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMapsBase.framework; path = "GoogleMaps-2.7.0/Base/Frameworks/GoogleMapsBase.framework"; sourceTree = "<group>"; };
 		84DC812321888293002BAAB4 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMaps.framework; path = "GoogleMaps-2.7.0/Maps/Frameworks/GoogleMaps.framework"; sourceTree = "<group>"; };
 		84DC81252188829A002BAAB4 /* GoogleMapsCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMapsCore.framework; path = "GoogleMaps-2.7.0/Maps/Frameworks/GoogleMapsCore.framework"; sourceTree = "<group>"; };
@@ -411,6 +411,7 @@
 		84DC812D218883DC002BAAB4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		84DC812F218883E9002BAAB4 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		84DC8131218883F3002BAAB4 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		84F05EEC2189EAE50018FE42 /* location_spoof_inside_area.gpx */ = {isa = PBXFileReference; lastKnownFileType = text; name = location_spoof_inside_area.gpx; path = ../src/constants/location_spoof_inside_area.gpx; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		CC4592E720CFAFD700313437 /* ReactNativeNavigation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeNavigation.xcodeproj; path = "../node_modules/react-native-navigation/ios/ReactNativeNavigation.xcodeproj"; sourceTree = "<group>"; };
 		CC7C0EBE20C7D56800F1E237 /* Voice.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Voice.xcodeproj; path = "../node_modules/react-native-voice/ios/Voice.xcodeproj"; sourceTree = "<group>"; };
@@ -659,9 +660,10 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				84F05EEC2189EAE50018FE42 /* location_spoof_inside_area.gpx */,
 				8425E93621888B3100801F00 /* AirMaps.xcodeproj */,
 				84DC81272188834A002BAAB4 /* GoogleMaps.bundle */,
-				84BEA1CB21883EC40071DF9E /* location_spoof.gpx */,
+				84BEA1CB21883EC40071DF9E /* location_spoof_outside_area.gpx */,
 				13B07FAE1A68108700A75B9A /* VoiceNavigation */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* VoiceNavigationTests */,

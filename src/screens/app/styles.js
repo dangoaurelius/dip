@@ -60,6 +60,8 @@ const styles = StyleSheet.create({
   },
   mapContainer: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   map: {
     position: 'absolute',

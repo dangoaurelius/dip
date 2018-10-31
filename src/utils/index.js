@@ -4,11 +4,22 @@
 
 import Speech from './Speech';
 import getMapURL from './mapURL';
-import getGeolocation, { getInitialRegion } from './geolocation';
+import {
+  checkGeolocationPermission,
+  unsubscribeGeolocation,
+  testPointWithLocation,
+  getCurrentGeolocation,
+  subscribeGeolocation,
+  getInitialRegion,
+} from './geolocation';
 
 export {
   Speech,
   getMapURL,
-  getGeolocation,
   getInitialRegion,
+  subscribeGeolocation,
+  testPointWithLocation,
+  getCurrentGeolocation,
+  unsubscribeGeolocation,
+  checkGeolocationPermission,
 };

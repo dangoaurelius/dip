@@ -1,7 +1,5 @@
 /* eslint-disable max-len */
-// export const housing = {
-//   "корпус"
-// }
+export * from './colors';
 
 export const GOOGLE_MAPS_URL = 'https://www.google.com/maps/embed/v1/directions';
 export const GOOGLE_API_KEY = 'AIzaSyA-VLCarDVR316nzG2L4hZ8Vh5wvBPViiA';
@@ -218,35 +216,117 @@ export const MAP_SETTINGS = {
   apiKey: GOOGLE_API_KEY,
 };
 
+export const ZNTU_COORDS = {
+  entryPointCoord: {
+    latitude: 47.817440,
+    longitude: 35.183654,
+  },
+  territoryCoords: {
+    topLeft: {
+      latitude: 47.818900,
+      longitude: 35.184541,
+    },
+    bottomLeft: {
+      latitude: 47.818146,
+      longitude: 35.182911,
+    },
+    topRight: {
+      latitude: 47.817491,
+      longitude: 35.186666,
+    },
+    bottomRight: {
+      latitude: 47.816585,
+      longitude: 35.184791,
+    },
+  },
+};
+
 export const geolocationParams = {
   maximumAge: 0,
   timeout: 10000,
+  distanceFilter: 5,
+  enableHighAccuracy: false,
 };
 
 export const destinations = {
   1: {
     title: 'Корпус 1',
-    destination: '%D0%A3%D1%87%D0%B5%D0%B1%D0%BD%D1%8B%D0%B9%20%D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81%20%D0%97%D0%9D%D0%A2%D0%A3%20%E2%84%963%2C%20%D0%B2%D1%83%D0%BB%D0%B8%D1%86%D1%8F%20%D0%A2%D1%83%D1%80%D0%B3%D0%B5%D0%BD%D1%94%D0%B2%D0%B0%2C%2037%2F64%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%8C%D0%B5%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C%2C%2069061',
+    place_id: 'ChIJY3JQ7Ape3EARga4oPu13RUc',
+    coordinates: {
+      entry: {
+        latitude: 47.817605,
+        longitude: 35.184059,
+      },
+      exit: {
+        latitude: 47.817651,
+        longitude: 35.184420,
+      },
+    },
+    address: '%D0%A3%D1%87%D0%B5%D0%B1%D0%BD%D1%8B%D0%B9%20%D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81%20%D0%97%D0%9D%D0%A2%D0%A3%20%E2%84%963%2C%20%D0%B2%D1%83%D0%BB%D0%B8%D1%86%D1%8F%20%D0%A2%D1%83%D1%80%D0%B3%D0%B5%D0%BD%D1%94%D0%B2%D0%B0%2C%2037%2F64%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%8C%D0%B5%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C%2C%2069061',
   },
   2: {
     id: 2,
     title: 'Корпус 2',
-    destination: '%D0%A3%D1%87%D0%B5%D0%B1%D0%BD%D1%8B%D0%B9%20%D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81%20%D0%97%D0%9D%D0%A2%D0%A3%20%E2%84%963%2C%20%D0%B2%D1%83%D0%BB%D0%B8%D1%86%D1%8F%20%D0%A2%D1%83%D1%80%D0%B3%D0%B5%D0%BD%D1%94%D0%B2%D0%B0%2C%2037%2F64%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%8C%D0%B5%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C%2C%2069061',
+    placeId: 'ChIJwfEWJQpe3EARbtsL_NDbJPU',
+    coordinates: {
+      entry: {
+        latitude: 47.818009,
+        longitude: 35.185693,
+      },
+      exit: {
+        latitude: 47.818009,
+        longitude: 35.185693,
+      },
+    },
+    address: '%D0%A3%D1%87%D0%B5%D0%B1%D0%BD%D1%8B%D0%B9%20%D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81%20%D0%97%D0%9D%D0%A2%D0%A3%20%E2%84%963%2C%20%D0%B2%D1%83%D0%BB%D0%B8%D1%86%D1%8F%20%D0%A2%D1%83%D1%80%D0%B3%D0%B5%D0%BD%D1%94%D0%B2%D0%B0%2C%2037%2F64%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%8C%D0%B5%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C%2C%2069061',
   },
   3: {
     id: 3,
     title: 'Корпус 3',
-    destination: '%D0%A3%D1%87%D0%B5%D0%B1%D0%BD%D1%8B%D0%B9%20%D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81%20%D0%97%D0%9D%D0%A2%D0%A3%20%E2%84%963%2C%20%D0%B2%D1%83%D0%BB%D0%B8%D1%86%D1%8F%20%D0%A2%D1%83%D1%80%D0%B3%D0%B5%D0%BD%D1%94%D0%B2%D0%B0%2C%2037%2F64%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%8C%D0%B5%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C%2C%2069061',
+    placeId: 'ChIJ13qPvApe3EARq9UntbIkRP8',
+    coordinates: {
+      entry: {
+        latitude: 47.817936,
+        longitude: 35.185547,
+      },
+      exit: {
+        latitude: 47.817936,
+        longitude: 35.185547,
+      },
+    },
+    address: '%D0%A3%D1%87%D0%B5%D0%B1%D0%BD%D1%8B%D0%B9%20%D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81%20%D0%97%D0%9D%D0%A2%D0%A3%20%E2%84%963%2C%20%D0%B2%D1%83%D0%BB%D0%B8%D1%86%D1%8F%20%D0%A2%D1%83%D1%80%D0%B3%D0%B5%D0%BD%D1%94%D0%B2%D0%B0%2C%2037%2F64%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%8C%D0%B5%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C%2C%2069061',
   },
   4: {
     id: 4,
     title: 'Корпус 4',
-    destination: '%D0%A3%D1%87%D0%B5%D0%B1%D0%BD%D1%8B%D0%B9%20%D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81%20%D0%97%D0%9D%D0%A2%D0%A3%20%E2%84%963%2C%20%D0%B2%D1%83%D0%BB%D0%B8%D1%86%D1%8F%20%D0%A2%D1%83%D1%80%D0%B3%D0%B5%D0%BD%D1%94%D0%B2%D0%B0%2C%2037%2F64%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%8C%D0%B5%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C%2C%2069061',
+    placeId: 'ChIJ13qPvApe3EARq9UntbIkRP8',
+    coordinates: {
+      entry: {
+        latitude: 47.818009,
+        longitude: 35.185693,
+      },
+      exit: {
+        latitude: 47.818009,
+        longitude: 35.185693,
+      },
+    },
+    address: '%D0%A3%D1%87%D0%B5%D0%B1%D0%BD%D1%8B%D0%B9%20%D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81%20%D0%97%D0%9D%D0%A2%D0%A3%20%E2%84%963%2C%20%D0%B2%D1%83%D0%BB%D0%B8%D1%86%D1%8F%20%D0%A2%D1%83%D1%80%D0%B3%D0%B5%D0%BD%D1%94%D0%B2%D0%B0%2C%2037%2F64%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%8C%D0%B5%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C%2C%2069061',
   },
   5: {
     id: 5,
     title: 'Корпус 5',
-    destination: '%D0%A3%D1%87%D0%B5%D0%B1%D0%BD%D1%8B%D0%B9%20%D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81%20%D0%97%D0%9D%D0%A2%D0%A3%20%E2%84%963%2C%20%D0%B2%D1%83%D0%BB%D0%B8%D1%86%D1%8F%20%D0%A2%D1%83%D1%80%D0%B3%D0%B5%D0%BD%D1%94%D0%B2%D0%B0%2C%2037%2F64%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%8C%D0%B5%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C%2C%2069061',
+    placeId: 'ChIJ4VJvlApe3EARXpiomR6xPu8',
+    coordinates: {
+      entry: {
+        latitude: 47.818009,
+        longitude: 35.185693,
+      },
+      exit: {
+        latitude: 47.818009,
+        longitude: 35.185693,
+      },
+    },
+    address: '%D0%A3%D1%87%D0%B5%D0%B1%D0%BD%D1%8B%D0%B9%20%D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81%20%D0%97%D0%9D%D0%A2%D0%A3%20%E2%84%963%2C%20%D0%B2%D1%83%D0%BB%D0%B8%D1%86%D1%8F%20%D0%A2%D1%83%D1%80%D0%B3%D0%B5%D0%BD%D1%94%D0%B2%D0%B0%2C%2037%2F64%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%8C%D0%B5%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C%2C%2069061',
   },
 };
 
