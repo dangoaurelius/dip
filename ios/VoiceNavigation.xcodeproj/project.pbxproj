@@ -660,8 +660,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				84F05EEC2189EAE50018FE42 /* location_spoof_inside_area.gpx */,
 				8425E93621888B3100801F00 /* AirMaps.xcodeproj */,
+				84F05EEC2189EAE50018FE42 /* location_spoof_inside_area.gpx */,
 				84DC81272188834A002BAAB4 /* GoogleMaps.bundle */,
 				84BEA1CB21883EC40071DF9E /* location_spoof_outside_area.gpx */,
 				13B07FAE1A68108700A75B9A /* VoiceNavigation */,

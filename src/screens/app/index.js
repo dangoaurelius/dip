@@ -6,6 +6,7 @@ import Voice from 'react-native-voice';
 import {
   ActivityIndicator,
   TouchableOpacity,
+  Animated,
   Platform,
   Image,
   Text,
@@ -36,6 +37,8 @@ import {
   GOOGLE_API_KEY,
   POLIGONE_FILL_COLOR,
   DIRECTION_LINE_COLOR,
+  opacityInterpolation,
+  translateYInterpolation,
 } from '../../constants';
 
 import styles from './styles';
@@ -66,6 +69,8 @@ export default class App extends Component {
       partialResults: [],
       words: [],
       directionViewState: 0, // 0 - hide, 1 - loding (on geolocaiton retriving), 3 - show web view
+      isUserInZNTUTerritory: false,
+      animation: new Animated.Value(0),
     };
 
     Voice.onSpeechResults = this.onSpeechResults.bind(this);
@@ -203,6 +208,7 @@ export default class App extends Component {
     const { address, coordinates: { entry } } = destinations[auditoryNumber];
     this.setState(
       {
+        destinationObject: destinations[auditoryNumber],
         housingDestination: address,
         housingCoordinates: entry,
         directionViewState: 1,
@@ -214,11 +220,14 @@ export default class App extends Component {
   _onLocationSuccess = ({ coords }) => {
     const { housingDestination } = this.state;
     const initialRegion = getInitialRegion(coords);
+    console.log('coords', coords);
+    const isUserInZNTUTerritory = testPointWithLocation(coords, ZNTU_TERRITORY_COORDS);
     this.setState({
       initialRegion,
       housingDestination,
       userCoords: coords,
       directionViewState: 2,
+      isUserInZNTUTerritory,
     });
   }
 
@@ -236,8 +245,153 @@ export default class App extends Component {
       userCoords: null,
       initialRegion: null,
       housingDestination: null,
+      destinationObject: null,
       directionViewState: 0,
+      isUserInZNTUTerritory: false,
     });
+  }
+
+  _getAnimatedStyle = () => {
+    const { directionViewState, animation } = this.state;
+    // Loading state
+    if (directionViewState === 1) {
+      return {
+        opacity: animation.interpolate(opacityInterpolation),
+      };
+    } else {
+      return {
+        transform: [
+          { TranslateY: animation.interpolate(translateYInterpolation) },
+        ],
+      };
+    }
+  }
+
+  _renderMapViewAttributes = () => {
+    const {
+      mode,
+      userCoords,
+      destinationObject,
+      isUserInZNTUTerritory,
+    } = this.state;
+    const { entryPointCoord, entryPointCoordHousing4 } = ZNTU_COORDS;
+    const {
+      id,
+      coordinates: {
+        entry,
+        exit,
+      },
+    } = destinationObject;
+    const housingOneEntryCoords = destinations['1'].coordinates.entry;
+    const housingOneExitCoords = destinations['1'].coordinates.exit;
+    console.log('_renderMapViewAttributes');
+    const attributesViewArray = [
+      <Marker
+        key={'key-user-marker'}
+        title={'Вы здесь'}
+        coordinate={userCoords}
+        description={'Ваше текущее местоположение.'}
+      />,
+      <Marker
+        key={'key-destination-marker'}
+        title={'Идти сюда'}
+        coordinate={entry}
+        description={'Местоположение цели.'}
+      />,
+    ];
+
+    if (id === 4) {
+      if (isUserInZNTUTerritory) {
+        console.log('If housing 4 inside ZNTU');
+        attributesViewArray.push([
+          <Polyline
+            key={'key-4'}
+            coordinates={[
+              userCoords,
+              housingOneExitCoords,
+              housingOneEntryCoords,
+              entryPointCoord,
+              {
+                latitude: 47.816615,
+                longitude: 35.184674,
+              },
+              entryPointCoordHousing4,
+              entry,
+            ]}
+          />,
+          // <MapViewDirections
+          //   key={'key-MapViewDirections'}
+          //   mode={mode}
+          //   strokeWidth={3}
+          //   origin={entryPointCoord}
+          //   resetOnChange={false}
+          //   apikey={GOOGLE_API_KEY}
+          //   destination={entryPointCoordHousing4}
+          //   strokeColor={DIRECTION_LINE_COLOR}
+          // />,
+          // <Polyline
+          //   key={'key-5'}
+          //   coordinates={[
+          //     entryPointCoordHousing4,
+          //     entry,
+          //   ]}
+          // />,
+        ]);
+      } else {
+        console.log('If housing 4 outside ZNTU');
+        attributesViewArray.push([
+          <MapViewDirections
+            key={'key-MapViewDirections'}
+            mode={mode}
+            strokeWidth={3}
+            origin={userCoords}
+            resetOnChange={false}
+            apikey={GOOGLE_API_KEY}
+            destination={entryPointCoordHousing4}
+            strokeColor={DIRECTION_LINE_COLOR}
+          />,
+          <Polyline
+            key={'key-4'}
+            coordinates={[
+              entryPointCoordHousing4,
+              entry,
+            ]}
+          />,
+        ]);
+      }
+    } else if (isUserInZNTUTerritory && id === 2) {
+      console.log('isUserInZNTUTerritory && id !== 2');
+      if (isUserInZNTUTerritory) {
+
+      } else {
+        attributesViewArray.push(<Polyline coordinates={[userCoords, entry]} />);
+      }
+    } else {
+      console.log('isUserInZNTUTerritory && id !== 2 -> else');
+      attributesViewArray.push([
+        <MapViewDirections
+          key={'key1'}
+          mode={mode}
+          strokeWidth={3}
+          origin={userCoords}
+          resetOnChange={false}
+          apikey={GOOGLE_API_KEY}
+          destination={entryPointCoord}
+          strokeColor={DIRECTION_LINE_COLOR}
+        />,
+        <Polyline
+          key={'key2'}
+          coordinates={[
+            entryPointCoord,
+            housingOneEntryCoords,
+            housingOneExitCoords,
+            entry,
+          ]}
+        />,
+      ]);
+    }
+
+    return attributesViewArray;
   }
 
   _renderMapView = () => {
@@ -246,52 +400,48 @@ export default class App extends Component {
       initialRegion,
       housingCoordinates,
       directionViewState,
+      isUserInZNTUTerritory,
     } = this.state;
     const { mode } = MAP_SETTINGS;
     const { entryPointCoord } = ZNTU_COORDS;
     const housingOneEntryCoords = destinations['1'].coordinates.entry;
     const housingOneExitCoords = destinations['1'].coordinates.exit;
-
+    console.log('render map view');
     return (
       <View style={styles.mapContainer}>
         {directionViewState === 2
           ? (
           <MapView
-          style={styles.map}
-          provider={MAP_PROFIDER}
-          initialRegion={initialRegion}
+            style={styles.map}
+            provider={MAP_PROFIDER}
+            initialRegion={initialRegion}
           >
-            <Marker
-            title={'User Marker'}
-            coordinate={userCoords}
-            description={'Description'}
-            />
-            <Polygon
-              fillColor={POLIGONE_FILL_COLOR}
-              coordinates={ZNTU_TERRITORY_COORDS}
-            />
-            <MapViewDirections
-              mode={mode}
-              strokeWidth={3}
-              origin={userCoords}
-              resetOnChange={false}
-              apikey={GOOGLE_API_KEY}
-              destination={entryPointCoord}
-              strokeColor={DIRECTION_LINE_COLOR}
-            />
-            <Polyline
-              coordinates={[
-                entryPointCoord,
-                housingOneEntryCoords,
-                housingOneExitCoords,
-                housingCoordinates,
-              ]}
-            />
-            <Marker
-            title={'Идти сюда'}
-            coordinate={housingCoordinates}
-            description={'Description'}
-            />
+            {this._renderMapViewAttributes()}
+            {/* {
+              isUserInZNTUTerritory
+                ? (<Polyline coordinates={[userCoords, housingCoordinates]} />)
+                : ([
+                    <MapViewDirections
+                      key={'key1'}
+                      mode={mode}
+                      strokeWidth={3}
+                      origin={userCoords}
+                      resetOnChange={false}
+                      apikey={GOOGLE_API_KEY}
+                      destination={entryPointCoord}
+                      strokeColor={DIRECTION_LINE_COLOR}
+                    />,
+                    <Polyline
+                      key={'key2'}
+                      coordinates={[
+                        entryPointCoord,
+                        housingOneEntryCoords,
+                        housingOneExitCoords,
+                        housingCoordinates,
+                      ]}
+                    />,
+                ])
+            } */}
           </MapView>
           )
           : (<ActivityIndicator size={'large'} />)
@@ -302,7 +452,7 @@ export default class App extends Component {
 
   _renderText = text => (<Text style={styles.textRecognize}>Text: {text}</Text>);
 
-  __debugOnClick = () => this.getInformation(['У', 'меня', 'вопрос', 'Я', 'ищу', '10', 'аудиторию']);
+  __debugOnClick = () => this.getInformation(['У', 'меня', 'вопрос', 'Я', 'ищу', '211', 'аудиторию']);
 
   render() {
     const { started, directionViewState } = this.state;

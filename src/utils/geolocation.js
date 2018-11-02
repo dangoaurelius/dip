@@ -50,19 +50,18 @@ export const checkGeolocationPermission = async () => {
   }
 };
 
-export const testPointWithLocation = (point, polygon) => {
-  let testResult = false;
-  const lastElementIndex = polygon.length - 1;
+export const testPointWithLocation = (point, vs) => {
+  const x = point.latitude;
+  const y = point.longitude;
 
-  polygon.forEach((polyPoint) => {
-    if (((polyPoint.latitude <= point.latitude && point.latitude < polygon[lastElementIndex].latitude)
-       || ((polygon[lastElementIndex].latitude <= point.latitude) && (point.latitude < polyPoint.latitude)))
-       && (point.longitude < (polygon[lastElementIndex].longitude - polyPoint.longitude) * (point.latitude - polyPoint.latitude) / polygon[lastElementIndex].latitude - polyPoint.latitude + polyPoint.longitude)
-    ) {
-      //
-      testResult = true;
-    }
-  });
-
-  return testResult;
+  let inside = false;
+  for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+    const xi = vs[i].latitude;
+    const yi = vs[i].longitude;
+    const xj = vs[j].latitude;
+    const yj = vs[j].longitude;
+    const intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+    if (intersect) inside = !inside;
+  }
+  return inside;
 };

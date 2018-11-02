@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 export * from './colors';
+export * from './animationInterpolation';
 
 export const GOOGLE_MAPS_URL = 'https://www.google.com/maps/embed/v1/directions';
 export const GOOGLE_API_KEY = 'AIzaSyA-VLCarDVR316nzG2L4hZ8Vh5wvBPViiA';
@@ -221,6 +222,10 @@ export const ZNTU_COORDS = {
     latitude: 47.817440,
     longitude: 35.183654,
   },
+  entryPointCoordHousing4: {
+    latitude: 47.816845,
+    longitude: 35.185110,
+  },
   territoryCoords: {
     topLeft: {
       latitude: 47.818900,
@@ -251,7 +256,7 @@ export const geolocationParams = {
 export const destinations = {
   1: {
     title: 'Корпус 1',
-    place_id: 'ChIJY3JQ7Ape3EARga4oPu13RUc',
+    placeId: 'ChIJY3JQ7Ape3EARga4oPu13RUc',
     coordinates: {
       entry: {
         latitude: 47.817605,
@@ -270,12 +275,12 @@ export const destinations = {
     placeId: 'ChIJwfEWJQpe3EARbtsL_NDbJPU',
     coordinates: {
       entry: {
-        latitude: 47.818009,
-        longitude: 35.185693,
+        latitude: 47.818848,
+        longitude: 35.180025,
       },
       exit: {
-        latitude: 47.818009,
-        longitude: 35.185693,
+        latitude: 47.818848,
+        longitude: 35.180025,
       },
     },
     address: '%D0%A3%D1%87%D0%B5%D0%B1%D0%BD%D1%8B%D0%B9%20%D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81%20%D0%97%D0%9D%D0%A2%D0%A3%20%E2%84%963%2C%20%D0%B2%D1%83%D0%BB%D0%B8%D1%86%D1%8F%20%D0%A2%D1%83%D1%80%D0%B3%D0%B5%D0%BD%D1%94%D0%B2%D0%B0%2C%2037%2F64%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%8C%D0%B5%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C%2C%2069061',
@@ -302,12 +307,12 @@ export const destinations = {
     placeId: 'ChIJ13qPvApe3EARq9UntbIkRP8',
     coordinates: {
       entry: {
-        latitude: 47.818009,
-        longitude: 35.185693,
+        latitude: 47.817276,
+        longitude: 35.185698,
       },
       exit: {
-        latitude: 47.818009,
-        longitude: 35.185693,
+        latitude: 47.817276,
+        longitude: 35.185698,
       },
     },
     address: '%D0%A3%D1%87%D0%B5%D0%B1%D0%BD%D1%8B%D0%B9%20%D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81%20%D0%97%D0%9D%D0%A2%D0%A3%20%E2%84%963%2C%20%D0%B2%D1%83%D0%BB%D0%B8%D1%86%D1%8F%20%D0%A2%D1%83%D1%80%D0%B3%D0%B5%D0%BD%D1%94%D0%B2%D0%B0%2C%2037%2F64%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%8C%D0%B5%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C%2C%2069061',
