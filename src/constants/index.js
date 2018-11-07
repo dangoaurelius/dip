@@ -257,6 +257,44 @@ export const destinations = {
   1: {
     title: 'Корпус 1',
     placeId: 'ChIJY3JQ7Ape3EARga4oPu13RUc',
+    territory: [
+      [
+        {
+          latitude: 47.818328,
+          longitude: 35.183486,
+        },
+        {
+          latitude: 47.818235,
+          longitude: 35.183322,
+        },
+        {
+          latitude: 47.817052,
+          longitude: 35.184820,
+        },
+        {
+          latitude: 47.817115,
+          longitude: 35.184969,
+        },
+      ],
+      [
+        {
+          latitude: 10,
+          longitude: 10,
+        },
+        {
+          latitude: 10,
+          longitude: 10,
+        },
+        {
+          latitude: 10,
+          longitude: 10,
+        },
+        {
+          latitude: 10,
+          longitude: 10,
+        },
+      ],
+    ],
     coordinates: {
       entry: {
         latitude: 47.817605,
@@ -273,6 +311,26 @@ export const destinations = {
     id: 2,
     title: 'Корпус 2',
     placeId: 'ChIJwfEWJQpe3EARbtsL_NDbJPU',
+    territory: [
+      [
+        {
+          latitude: 47.819233,
+          longitude: 35.179955,
+        },
+        {
+          latitude: 47.819141,
+          longitude: 35.179774,
+        },
+        {
+          latitude: 47.818611,
+          longitude: 35.180396,
+        },
+        {
+          latitude: 47.818708,
+          longitude: 35.180583,
+        },
+      ],
+    ],
     coordinates: {
       entry: {
         latitude: 47.818848,
@@ -288,6 +346,26 @@ export const destinations = {
   3: {
     id: 3,
     title: 'Корпус 3',
+    territory: [
+      [
+        {
+          latitude: 47.818214,
+          longitude: 35.185658,
+        },
+        {
+          latitude: 47.818114,
+          longitude: 35.185457,
+        },
+        {
+          latitude: 47.817736,
+          longitude: 35.185912,
+        },
+        {
+          latitude: 47.817837,
+          longitude: 35.186091,
+        },
+      ],
+    ],
     placeId: 'ChIJ13qPvApe3EARq9UntbIkRP8',
     coordinates: {
       entry: {
@@ -304,6 +382,26 @@ export const destinations = {
   4: {
     id: 4,
     title: 'Корпус 4',
+    territory: [
+      [
+        {
+          latitude: 47.817639,
+          longitude: 35.186182,
+        },
+        {
+          latitude: 47.817329,
+          longitude: 35.185638,
+        },
+        {
+          latitude: 47.817130,
+          longitude: 35.185897,
+        },
+        {
+          latitude: 47.817444,
+          longitude: 35.186444,
+        },
+      ],
+    ],
     placeId: 'ChIJ13qPvApe3EARq9UntbIkRP8',
     coordinates: {
       entry: {
@@ -320,6 +418,26 @@ export const destinations = {
   5: {
     id: 5,
     title: 'Корпус 5',
+    territory: [
+      [
+        {
+          latitude: 47.817932,
+          longitude: 35.184406,
+        },
+        {
+          latitude: 47.817792,
+          longitude: 35.184566,
+        },
+        {
+          latitude: 47.818157,
+          longitude: 35.185200,
+        },
+        {
+          latitude: 47.818275,
+          longitude: 35.185063,
+        },
+      ],
+    ],
     placeId: 'ChIJ4VJvlApe3EARXpiomR6xPu8',
     coordinates: {
       entry: {
