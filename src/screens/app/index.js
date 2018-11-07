@@ -222,6 +222,11 @@ export default class App extends Component {
     const initialRegion = getInitialRegion(coords);
     console.log('coords', coords);
     const isUserInZNTUTerritory = testPointWithLocation(coords, ZNTU_TERRITORY_COORDS);
+
+    if (isUserInZNTUTerritory) {
+
+    }
+
     this.setState({
       initialRegion,
       housingDestination,
@@ -269,11 +274,11 @@ export default class App extends Component {
 
   _renderMapViewAttributes = () => {
     const {
-      mode,
       userCoords,
       destinationObject,
       isUserInZNTUTerritory,
     } = this.state;
+    const { mode } = MAP_SETTINGS;
     const { entryPointCoord, entryPointCoordHousing4 } = ZNTU_COORDS;
     const {
       id,
@@ -302,7 +307,6 @@ export default class App extends Component {
 
     if (id === 4) {
       if (isUserInZNTUTerritory) {
-        console.log('If housing 4 inside ZNTU');
         attributesViewArray.push([
           <Polyline
             key={'key-4'}
@@ -319,26 +323,8 @@ export default class App extends Component {
               entry,
             ]}
           />,
-          // <MapViewDirections
-          //   key={'key-MapViewDirections'}
-          //   mode={mode}
-          //   strokeWidth={3}
-          //   origin={entryPointCoord}
-          //   resetOnChange={false}
-          //   apikey={GOOGLE_API_KEY}
-          //   destination={entryPointCoordHousing4}
-          //   strokeColor={DIRECTION_LINE_COLOR}
-          // />,
-          // <Polyline
-          //   key={'key-5'}
-          //   coordinates={[
-          //     entryPointCoordHousing4,
-          //     entry,
-          //   ]}
-          // />,
         ]);
       } else {
-        console.log('If housing 4 outside ZNTU');
         attributesViewArray.push([
           <MapViewDirections
             key={'key-MapViewDirections'}
@@ -352,6 +338,8 @@ export default class App extends Component {
           />,
           <Polyline
             key={'key-4'}
+            strokeWidth={3}
+            strokeColor={DIRECTION_LINE_COLOR}
             coordinates={[
               entryPointCoordHousing4,
               entry,
@@ -359,36 +347,119 @@ export default class App extends Component {
           />,
         ]);
       }
-    } else if (isUserInZNTUTerritory && id === 2) {
-      console.log('isUserInZNTUTerritory && id !== 2');
+    } else if (id === 2) {
       if (isUserInZNTUTerritory) {
-
+        attributesViewArray.push([
+          <Polyline
+            key={'key2'}
+            strokeWidth={3}
+            strokeColor={DIRECTION_LINE_COLOR}
+            coordinates={[
+              userCoords,
+              housingOneExitCoords,
+              housingOneEntryCoords,
+              entryPointCoord,
+            ]}
+          />,
+          <MapViewDirections
+            key={'key1'}
+            mode={mode}
+            strokeWidth={3}
+            origin={entryPointCoord}
+            resetOnChange={false}
+            apikey={GOOGLE_API_KEY}
+            destination={entry}
+            strokeColor={DIRECTION_LINE_COLOR}
+          />,
+        ]);
       } else {
-        attributesViewArray.push(<Polyline coordinates={[userCoords, entry]} />);
+        attributesViewArray.push(
+          <MapViewDirections
+            key={'key1'}
+            mode={mode}
+            strokeWidth={3}
+            origin={userCoords}
+            resetOnChange={false}
+            apikey={GOOGLE_API_KEY}
+            destination={entry}
+            strokeColor={DIRECTION_LINE_COLOR}
+          />,
+        );
+      }
+    } else if (id === 1) {
+      if (isUserInZNTUTerritory) {
+        attributesViewArray.push([
+          <Polyline
+            key={'key2'}
+            strokeWidth={3}
+            strokeColor={DIRECTION_LINE_COLOR}
+            coordinates={[
+              userCoords,
+              housingOneExitCoords,
+            ]}
+          />,
+        ]);
+      } else {
+        attributesViewArray.push([
+          <MapViewDirections
+            key={'key1'}
+            mode={mode}
+            strokeWidth={3}
+            origin={userCoords}
+            resetOnChange={false}
+            apikey={GOOGLE_API_KEY}
+            destination={entryPointCoord}
+            strokeColor={DIRECTION_LINE_COLOR}
+          />,
+          <Polyline
+            key={'key2'}
+            strokeWidth={3}
+            strokeColor={DIRECTION_LINE_COLOR}
+            coordinates={[
+              entryPointCoord,
+              housingOneEntryCoords,
+            ]}
+          />,
+        ]);
       }
     } else {
-      console.log('isUserInZNTUTerritory && id !== 2 -> else');
-      attributesViewArray.push([
-        <MapViewDirections
-          key={'key1'}
-          mode={mode}
-          strokeWidth={3}
-          origin={userCoords}
-          resetOnChange={false}
-          apikey={GOOGLE_API_KEY}
-          destination={entryPointCoord}
-          strokeColor={DIRECTION_LINE_COLOR}
-        />,
-        <Polyline
-          key={'key2'}
-          coordinates={[
-            entryPointCoord,
-            housingOneEntryCoords,
-            housingOneExitCoords,
-            entry,
-          ]}
-        />,
-      ]);
+      if (isUserInZNTUTerritory) {
+        attributesViewArray.push([
+          <Polyline
+            key={'key2'}
+            strokeWidth={3}
+            strokeColor={DIRECTION_LINE_COLOR}
+            coordinates={[
+              userCoords,
+              entry,
+            ]}
+          />,
+        ]);
+      } else {
+        attributesViewArray.push([
+          <MapViewDirections
+            key={'key1'}
+            mode={mode}
+            strokeWidth={3}
+            origin={userCoords}
+            resetOnChange={false}
+            apikey={GOOGLE_API_KEY}
+            destination={entryPointCoord}
+            strokeColor={DIRECTION_LINE_COLOR}
+          />,
+          <Polyline
+            key={'key2'}
+            strokeWidth={3}
+            strokeColor={DIRECTION_LINE_COLOR}
+            coordinates={[
+              entryPointCoord,
+              housingOneEntryCoords,
+              housingOneExitCoords,
+              entry,
+            ]}
+          />,
+        ]);
+      }
     }
 
     return attributesViewArray;
@@ -396,16 +467,10 @@ export default class App extends Component {
 
   _renderMapView = () => {
     const {
-      userCoords,
       initialRegion,
-      housingCoordinates,
       directionViewState,
-      isUserInZNTUTerritory,
     } = this.state;
-    const { mode } = MAP_SETTINGS;
-    const { entryPointCoord } = ZNTU_COORDS;
-    const housingOneEntryCoords = destinations['1'].coordinates.entry;
-    const housingOneExitCoords = destinations['1'].coordinates.exit;
+
     console.log('render map view');
     return (
       <View style={styles.mapContainer}>
@@ -417,31 +482,6 @@ export default class App extends Component {
             initialRegion={initialRegion}
           >
             {this._renderMapViewAttributes()}
-            {/* {
-              isUserInZNTUTerritory
-                ? (<Polyline coordinates={[userCoords, housingCoordinates]} />)
-                : ([
-                    <MapViewDirections
-                      key={'key1'}
-                      mode={mode}
-                      strokeWidth={3}
-                      origin={userCoords}
-                      resetOnChange={false}
-                      apikey={GOOGLE_API_KEY}
-                      destination={entryPointCoord}
-                      strokeColor={DIRECTION_LINE_COLOR}
-                    />,
-                    <Polyline
-                      key={'key2'}
-                      coordinates={[
-                        entryPointCoord,
-                        housingOneEntryCoords,
-                        housingOneExitCoords,
-                        housingCoordinates,
-                      ]}
-                    />,
-                ])
-            } */}
           </MapView>
           )
           : (<ActivityIndicator size={'large'} />)
@@ -452,7 +492,7 @@ export default class App extends Component {
 
   _renderText = text => (<Text style={styles.textRecognize}>Text: {text}</Text>);
 
-  __debugOnClick = () => this.getInformation(['У', 'меня', 'вопрос', 'Я', 'ищу', '211', 'аудиторию']);
+  __debugOnClick = () => this.getInformation(['У', 'меня', 'вопрос', 'Я', 'ищу', '524', 'аудиторию']);
 
   render() {
     const { started, directionViewState } = this.state;

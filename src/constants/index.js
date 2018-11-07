@@ -276,24 +276,6 @@ export const destinations = {
           longitude: 35.184969,
         },
       ],
-      [
-        {
-          latitude: 10,
-          longitude: 10,
-        },
-        {
-          latitude: 10,
-          longitude: 10,
-        },
-        {
-          latitude: 10,
-          longitude: 10,
-        },
-        {
-          latitude: 10,
-          longitude: 10,
-        },
-      ],
     ],
     coordinates: {
       entry: {
@@ -441,12 +423,12 @@ export const destinations = {
     placeId: 'ChIJ4VJvlApe3EARXpiomR6xPu8',
     coordinates: {
       entry: {
-        latitude: 47.818009,
-        longitude: 35.185693,
+        latitude: 47.817862,
+        longitude: 35.184490,
       },
       exit: {
-        latitude: 47.818009,
-        longitude: 35.185693,
+        latitude: 47.817862,
+        longitude: 35.184490,
       },
     },
     address: '%D0%A3%D1%87%D0%B5%D0%B1%D0%BD%D1%8B%D0%B9%20%D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81%20%D0%97%D0%9D%D0%A2%D0%A3%20%E2%84%963%2C%20%D0%B2%D1%83%D0%BB%D0%B8%D1%86%D1%8F%20%D0%A2%D1%83%D1%80%D0%B3%D0%B5%D0%BD%D1%94%D0%B2%D0%B0%2C%2037%2F64%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%8C%D0%B5%2C%20%D0%97%D0%B0%D0%BF%D0%BE%D1%80%D0%BE%D0%B6%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C%2C%2069061',
