@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import MapView, {
   Marker,
-  Polygon,
   Polyline,
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
@@ -29,13 +28,14 @@ import {
 } from 'AppUtils';
 
 import {
+  FLOORS,
   numbers,
   auditory,
   ZNTU_COORDS,
   destinations,
   MAP_SETTINGS,
   GOOGLE_API_KEY,
-  POLIGONE_FILL_COLOR,
+  HOUSINGS_TEXT,
   DIRECTION_LINE_COLOR,
   opacityInterpolation,
   translateYInterpolation,
@@ -143,7 +143,7 @@ export default class App extends Component {
           }
         } else if (auditory[number[0].item]) {
           Speech.speak(auditory[number[0].item].text);
-          this._onAuditoryRecognised(auditory[number[0].item].housing);
+          this._onAuditoryRecognised(auditory[number[0].item].housing, number[0].item);
         } else {
           Speech.speak(`Аудитория ${number[0].item} не найдена`);
         }
@@ -204,11 +204,13 @@ export default class App extends Component {
     }
   }
 
-  _onAuditoryRecognised = (auditoryNumber) => {
-    const { address, coordinates: { entry } } = destinations[auditoryNumber];
+  _onAuditoryRecognised = (housingNumber, auditoryNumber) => {
+    const { address, coordinates: { entry } } = destinations[housingNumber];
     this.setState(
       {
-        destinationObject: destinations[auditoryNumber],
+        auditoryNumber,
+        housingNumber,
+        destinationObject: destinations[housingNumber],
         housingDestination: address,
         housingCoordinates: entry,
         directionViewState: 1,
@@ -217,17 +219,40 @@ export default class App extends Component {
     );
   }
 
-  _onLocationSuccess = ({ coords }) => {
-    const { housingDestination } = this.state;
-    const initialRegion = getInitialRegion(coords);
-    console.log('coords', coords);
-    const isUserInZNTUTerritory = testPointWithLocation(coords, ZNTU_TERRITORY_COORDS);
-
-    if (isUserInZNTUTerritory) {
-
+  _alreadyInHousingVoice = async (housingNumber, auditoryNumber) => {
+    try {
+      const isSpeaking = await Speech.isSpeaking();
+      if (isSpeaking) {
+        this._alreadyInHousingVoice(housingNumber, auditoryNumber);
+      } else {
+        const { floor } = auditory[auditoryNumber];
+        const inviteText = floor === 1 ? 'Пройдите' : 'Поднимитесь';
+        Speech.speak(`Вы уже в ${HOUSINGS_TEXT[housingNumber]} корпусе. ${inviteText} на ${FLOORS[floor]} этаж.`);
+      }
+    } catch (error) {
+      this._alreadyInHousingVoice(housingNumber, auditoryNumber);
     }
+  }
+
+  _onLocationSuccess = ({ coords }) => {
+    const { housingDestination, housingNumber, auditoryNumber } = this.state;
+    const initialRegion = getInitialRegion(coords);
+    const isUserInZNTUTerritory = testPointWithLocation(coords, ZNTU_TERRITORY_COORDS);
+    let inHousing = null;
+
+    const hTerritory = destinations[housingNumber].territory;
+    hTerritory.forEach(async (coordsItem) => {
+      if (testPointWithLocation(coords, coordsItem)) {
+        inHousing = housingNumber;
+        if (!this.firstTime) {
+          this._alreadyInHousingVoice(housingNumber, auditoryNumber);
+          this.firstTime = true;
+        }
+      }
+    });
 
     this.setState({
+      inHousing,
       initialRegion,
       housingDestination,
       userCoords: coords,
@@ -236,19 +261,27 @@ export default class App extends Component {
     });
   }
 
-  _onLocationError = (error) => {
-    if (error.code === 3) { // if timed out({app_folder}->src->constants.geolocationParams.timeout) then start again.
-      this._getCurrentGeolocation();
-      console.log('[GEO] Timeout exceeded. Trying again...');
-    } else {
-      console.warn('[GEO] Error on geolocation request.', error);
+  _onLocationError = ({ code }) => {
+    switch (code) {
+      case 2:
+        alert('Enable geolocaiton please!');
+        break;
+      case 3: // if timed out({app_folder}->src->constants.geolocationParams.timeout) then start again.
+        this._getCurrentGeolocation();
+        console.log('[GEO] Timeout exceeded. Trying again...');
+        break;
+      default:
+        console.warn('[GEO] Error on geolocation request. Code ', code);
+        break;
     }
   }
 
   _closeMap = () => {
+    this.firstTime = false;
     this.setState({
       userCoords: null,
       initialRegion: null,
+      currentHousing: null,
       housingDestination: null,
       destinationObject: null,
       directionViewState: 0,
@@ -289,14 +322,8 @@ export default class App extends Component {
     } = destinationObject;
     const housingOneEntryCoords = destinations['1'].coordinates.entry;
     const housingOneExitCoords = destinations['1'].coordinates.exit;
-    console.log('_renderMapViewAttributes');
+
     const attributesViewArray = [
-      <Marker
-        key={'key-user-marker'}
-        title={'Вы здесь'}
-        coordinate={userCoords}
-        description={'Ваше текущее местоположение.'}
-      />,
       <Marker
         key={'key-destination-marker'}
         title={'Идти сюда'}
@@ -467,11 +494,12 @@ export default class App extends Component {
 
   _renderMapView = () => {
     const {
+      inHousing,
+      userCoords,
       initialRegion,
       directionViewState,
     } = this.state;
 
-    console.log('render map view');
     return (
       <View style={styles.mapContainer}>
         {directionViewState === 2
@@ -481,7 +509,13 @@ export default class App extends Component {
             provider={MAP_PROFIDER}
             initialRegion={initialRegion}
           >
-            {this._renderMapViewAttributes()}
+            <Marker
+              key={'key-user-marker'}
+              title={'Вы здесь'}
+              coordinate={userCoords}
+              description={'Ваше текущее местоположение.'}
+            />
+            {!inHousing && this._renderMapViewAttributes()}
           </MapView>
           )
           : (<ActivityIndicator size={'large'} />)
@@ -492,7 +526,10 @@ export default class App extends Component {
 
   _renderText = text => (<Text style={styles.textRecognize}>Text: {text}</Text>);
 
-  __debugOnClick = () => this.getInformation(['У', 'меня', 'вопрос', 'Я', 'ищу', '524', 'аудиторию']);
+  __debugOnClick = () => {
+    this._closeMap();
+    this.getInformation(['У', 'меня', 'вопрос', 'Я', 'ищу', '320', 'аудиторию']); // 164 , 320
+  };
 
   render() {
     const { started, directionViewState } = this.state;

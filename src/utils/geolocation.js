@@ -2,7 +2,7 @@ import { Platform, PermissionsAndroid } from 'react-native';
 
 import { geolocationParams } from '../constants';
 
-let geolocationWatchID = null;
+let geolocationWatchID = 'null';
 
 export const getCurrentGeolocation = (onLocationSuccess, onLocationError) => {
   navigator.geolocation.getCurrentPosition(
@@ -13,7 +13,7 @@ export const getCurrentGeolocation = (onLocationSuccess, onLocationError) => {
 };
 
 export const subscribeGeolocation = (onLocationSuccess, onLocationError) => {
-  if (geolocationWatchID) {
+  if (geolocationWatchID !== 'null') {
     unsubscribeGeolocation();
   }
   geolocationWatchID = navigator.geolocation.watchPosition(
@@ -24,9 +24,10 @@ export const subscribeGeolocation = (onLocationSuccess, onLocationError) => {
 };
 
 export const unsubscribeGeolocation = () => {
-  if (geolocationWatchID) {
+  if (geolocationWatchID !== 'null') {
     navigator.geolocation.clearWatch(geolocationWatchID);
-    geolocationWatchID = null;
+    navigator.geolocation.stopObserving();
+    geolocationWatchID = 'null';
   }
 };
 
