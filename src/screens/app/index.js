@@ -3,9 +3,11 @@
 import MapViewDirections from 'react-native-maps-directions';
 import React, { Component } from 'react';
 import Voice from 'react-native-voice';
+import moment from 'moment';
 import {
   ActivityIndicator,
   TouchableOpacity,
+  ScrollView,
   Animated,
   Platform,
   Image,
@@ -21,6 +23,9 @@ import MapView, {
 import {
   Speech,
   getInitialRegion,
+  getCurrentDayName,
+  setScheduleForToday,
+  getScheduleForToday,
   subscribeGeolocation,
   testPointWithLocation,
   unsubscribeGeolocation,
@@ -44,6 +49,7 @@ import {
 import styles from './styles';
 
 const microphone = require('../../../assets/microphone.jpg');
+const menu = require('../../../assets/menu.png');
 
 const isAndroid = Platform.OS === 'android';
 const MAP_PROFIDER = isAndroid ? PROVIDER_GOOGLE : undefined;
@@ -66,6 +72,7 @@ export default class App extends Component {
 
     this.state = {
       results: [],
+      modalShow: false,
       partialResults: [],
       words: [],
       directionViewState: 0, // 0 - hide, 1 - loding (on geolocaiton retriving), 3 - show web view
@@ -78,6 +85,22 @@ export default class App extends Component {
     Voice.onSpeechEnd = this.onSpeechEnd.bind(this);
   }
 
+  async componentWillMount() {
+    try {
+      const schedule = await getScheduleForToday();
+      if (schedule) {
+        this.setState({
+          schedule,
+          showScreen: true,
+        });
+      }
+      console.warn('schedule', schedule);
+    } catch (error) {
+      alert('Error read data from storage.');
+      console.warn(error);
+    }
+  }
+
   componentWillUnmount() {
     unsubscribeGeolocation();
     Voice.destroy().then(Voice.removeAllListeners);
@@ -87,6 +110,48 @@ export default class App extends Component {
     const words = this.state.results[0].split(/ |-/);
     this.setState({ words });
     this.getInformation(words);
+  }
+
+  toggleModal = () => {
+    const { modalShow } = this.state;
+    this.setState({ modalShow: !modalShow });
+  }
+
+  onMenuPress = () => {
+    //
+    this.toggleModal();
+    // setScheduleForToday({
+    //   1: {
+    //     title: 'odin',
+    //     class: 125,
+    //     timeStart: moment(),
+    //     timeOver: moment(),
+    //   },
+    //   2: {
+    //     title: 'dva',
+    //     class: 20,
+    //     timeStart: moment(),
+    //     timeOver: moment(),
+    //   },
+    //   3: {
+    //     title: 'tri',
+    //     class: 520,
+    //     timeStart: moment(),
+    //     timeOver: moment(),
+    //   },
+    //   4: {
+    //     title: 'chetire',
+    //     class: 529,
+    //     timeStart: moment(),
+    //     timeOver: moment(),
+    //   },
+    //   5: {
+    //     title: 'piat',
+    //     class: 498,
+    //     timeStart: moment(),
+    //     timeOver: moment(),
+    //   },
+    // });
   }
 
   isNumber = (item) => {
@@ -531,8 +596,90 @@ export default class App extends Component {
     this.getInformation(['У', 'меня', 'вопрос', 'Я', 'ищу', '320', 'аудиторию']); // 164 , 320
   };
 
+  _renderScheduleClass = (item, index) => {
+    const { timeStart, timeOver, title } = item;
+    return (
+      <View key={`key-index-${index}`} style={styles.classInfoContainer}>
+        <Text style={{ marginRight: 10, }}>
+          {item.class}
+        </Text>
+        <Text style={{ flex: 1, }}>
+          {title}
+        </Text>
+        <Text style={{ marginRight: 10, }}>
+          {moment(timeStart).format('h:mm')}
+        </Text>
+        <Text style={{ marginRight: 10, }}>
+          {moment(timeOver).format('h:mm')}
+        </Text>
+        <Text
+          onPress={() => this.onPressGPS(auditory[item.class].housing, item.class)}
+          style={{ marginRight: 10 }}
+        >
+          Маршрут
+        </Text>
+      </View>
+    );
+  }
+
+  _renderScheduleModal = () => {
+    const { schedule } = this.state;
+    if (schedule) {
+      const tmp = Object.entries(schedule);
+      console.log('schedule, tmp', schedule, tmp);
+      return (
+        <View style={styles.modalContainer}>
+          <View style={styles.modalBody}>
+            <View style={styles.titleContainer}>
+              <Text>Расписание на {getCurrentDayName()}</Text>
+            </View>
+            <View style={styles.scheduleContainer}>
+              <ScrollView>
+                <View style={styles.classInfoContainer}>
+                  <Text style={{ width: '10%', marginRight: 10, }}>
+                    Ауд.
+                  </Text>
+                  <Text style={{ flex: 1, }}>
+                    Название
+                  </Text>
+                  <Text style={{ marginRight: 10, }}>
+                    Начало
+                  </Text>
+                  <Text style={{ marginRight: 10, }}>
+                    Конец
+                  </Text>
+                  <Text style={{ marginRight: 10, }}>
+                    Геолок.
+                  </Text>
+                </View>
+                {tmp.map((item, index) => (this._renderScheduleClass(item[1], index)))}
+              </ScrollView>
+            </View>
+            <View style={styles.saveButtonContainer}>
+              <TouchableOpacity>
+                <View style={styles.saveButton}>
+                  <Text>
+                    Сохранить
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      );
+    }
+    return null;
+  }
+
+  onPressGPS = (housing, className) => {
+    this.setState(
+      { modalShow: false },
+      () => this._onAuditoryRecognised(housing, className),
+    );
+  }
+
   render() {
-    const { started, directionViewState } = this.state;
+    const { modalShow, started, directionViewState } = this.state;
 
     return (
       <View style={styles.container}>
@@ -545,6 +692,14 @@ export default class App extends Component {
             <Image source={microphone} style={styles.microphoneImage} resizeMode="contain" />
           </TouchableOpacity>
         </View>
+        <View style={styles.menu}>
+          <TouchableOpacity onPress={this.onMenuPress}>
+            <Image
+              source={menu}
+              style={styles.menuImage}
+            />
+          </TouchableOpacity>
+        </View>
         <View style={styles.viewText}>
           {started && this._renderText(this.state.results[0])}
         </View>
@@ -552,6 +707,7 @@ export default class App extends Component {
           {started && this._renderText(this.state.partialResults[0])}
         </View>
         {(directionViewState !== 0) && this._renderMapView()}
+        {modalShow && this._renderScheduleModal()}
       </View>
     );
   }
