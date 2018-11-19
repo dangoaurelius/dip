@@ -600,21 +600,21 @@ export default class App extends Component {
     const { timeStart, timeOver, title } = item;
     return (
       <View key={`key-index-${index}`} style={styles.classInfoContainer}>
-        <Text style={{ marginRight: 10, }}>
+        <Text style={{ width: '15%', fontSize: 10, }}>
           {item.class}
         </Text>
-        <Text style={{ flex: 1, }}>
+        <Text style={{ flex: 1, fontSize: 10, }}>
           {title}
         </Text>
-        <Text style={{ marginRight: 10, }}>
+        <Text style={{ width: '20%', fontSize: 10, }}>
           {moment(timeStart).format('h:mm')}
         </Text>
-        <Text style={{ marginRight: 10, }}>
+        <Text style={{ width: '20%', fontSize: 10, }}>
           {moment(timeOver).format('h:mm')}
         </Text>
         <Text
           onPress={() => this.onPressGPS(auditory[item.class].housing, item.class)}
-          style={{ marginRight: 10 }}
+          style={{ width: '20%', fontSize: 10, }}
         >
           Маршрут
         </Text>
@@ -626,7 +626,6 @@ export default class App extends Component {
     const { schedule } = this.state;
     if (schedule) {
       const tmp = Object.entries(schedule);
-      console.log('schedule, tmp', schedule, tmp);
       return (
         <View style={styles.modalContainer}>
           <View style={styles.modalBody}>
@@ -636,19 +635,19 @@ export default class App extends Component {
             <View style={styles.scheduleContainer}>
               <ScrollView>
                 <View style={styles.classInfoContainer}>
-                  <Text style={{ width: '10%', marginRight: 10, }}>
+                  <Text style={{ width: '15%', fontSize: 12, }}>
                     Ауд.
                   </Text>
-                  <Text style={{ flex: 1, }}>
+                  <Text style={{ flex: 1, fontSize: 12, }}>
                     Название
                   </Text>
-                  <Text style={{ marginRight: 10, }}>
+                  <Text style={{ width: '20%', fontSize: 12, }}>
                     Начало
                   </Text>
-                  <Text style={{ marginRight: 10, }}>
+                  <Text style={{ width: '20%', fontSize: 12, }}>
                     Конец
                   </Text>
-                  <Text style={{ marginRight: 10, }}>
+                  <Text style={{ width: '20%', fontSize: 12, }}>
                     Геолок.
                   </Text>
                 </View>
@@ -656,10 +655,10 @@ export default class App extends Component {
               </ScrollView>
             </View>
             <View style={styles.saveButtonContainer}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={this.toggleModal}>
                 <View style={styles.saveButton}>
                   <Text>
-                    Сохранить
+                    Закрить
                   </Text>
                 </View>
               </TouchableOpacity>

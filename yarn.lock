@@ -4346,6 +4346,14 @@ react-native-android-speech@0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/react-native-android-speech/-/react-native-android-speech-0.0.6.tgz#297d94d762646e95cb021f3cbce72e62f73e6f9c"
 
+react-native-drawer@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/react-native-drawer/-/react-native-drawer-2.5.1.tgz#08b9314184f48c724f1b467f8859797369798654"
+  integrity sha512-cxcQNbSWy5sbGi7anSVp6EDr6JarOBMY9lbFOeLFeVYbONiudoqRKbgEsSDgSw3/LFCLvUXK5zdjXCOedeytxQ==
+  dependencies:
+    prop-types "^15.5.8"
+    tween-functions "^1.0.1"
+
 react-native-maps-directions@1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/react-native-maps-directions/-/react-native-maps-directions-1.6.0.tgz#d56e6119fd9ca9984e408970ae150fea3f9863c3"
@@ -5260,6 +5268,11 @@ tunnel-agent@^0.6.0:
   resolved "https://registry.yarnpkg.com/tunnel-agent/-/tunnel-agent-0.6.0.tgz#27a5dea06b36b04a0a9966774b290868f0fc40fd"
   dependencies:
     safe-buffer "^5.0.1"
+
+tween-functions@^1.0.1:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/tween-functions/-/tween-functions-1.2.0.tgz#1ae3a50e7c60bb3def774eac707acbca73bbc3ff"
+  integrity sha1-GuOlDnxguz3vd06scHrLynO7w/8=
 
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"
