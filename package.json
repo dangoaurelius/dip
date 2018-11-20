@@ -23,7 +23,10 @@
     "react-native-maps-directions": "1.6.0",
     "react-native-navigation": "1.1.471",
     "react-native-speech": "0.1.2",
-    "react-native-voice": "0.2.6"
+    "react-native-voice": "0.2.6",
+    "redux": "^4.0.1",
+    "redux-act": "^1.7.4",
+    "redux-persist": "^5.10.0"
   },
   "devDependencies": {
     "babel-eslint": "10.0.1",

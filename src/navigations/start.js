@@ -1,13 +1,13 @@
 import { Navigation } from 'react-native-navigation';
 
 export default () => {
-  Navigation.startSingleScreenApp({
-    screen: {
-      screen: 'VoiceNavigation.App',
-    },
-  }, {
-    appStyle: {
-      orientation: 'portrait',
-    },
+  Navigation.events().registerAppLaunchedListener(() => {
+    Navigation.setRoot({
+      root: {
+        component: {
+          name: 'VoiceNavigation.Map',
+        },
+      },
+    });
   });
 };

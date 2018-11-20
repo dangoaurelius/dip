@@ -7,5 +7,5 @@ import start from './start';
 
 export {
   registerScreens,
-  start
+  start,
 };
