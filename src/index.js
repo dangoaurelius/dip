@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   registerScreens,
-  start
+  start,
 } from './navigations';
 
+import store from './redux';
 
+registerScreens(store);
 
-registerScreens();
-
-export default class App extends Component {
+export default class App extends React.Component {
   constructor(props) {
     super(props);
     start();

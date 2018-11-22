@@ -23,6 +23,33 @@ export const HOUSINGS_TEXT = {
   6: 'шестом',
 };
 
+export const schedule = {
+  1: {
+    start: '',
+    end: '',
+  },
+  2: {
+    start: '',
+    end: '',
+  },
+  3: {
+    start: '',
+    end: '',
+  },
+  4: {
+    start: '',
+    end: '',
+  },
+  5: {
+    start: '',
+    end: '',
+  },
+  6: {
+    start: '',
+    end: '',
+  },
+};
+
 export const auditory = {
   125: {
     text: 'Аудитория 125 находится в первом корпусе на первом этаже.',

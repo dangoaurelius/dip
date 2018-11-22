@@ -3,6 +3,7 @@
 import MapViewDirections from 'react-native-maps-directions';
 import React, { Component } from 'react';
 import Voice from 'react-native-voice';
+import { Navigation } from 'react-native-navigation';
 import moment from 'moment';
 import {
   ActivityIndicator,
@@ -118,8 +119,23 @@ export default class App extends Component {
   }
 
   onMenuPress = () => {
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: 'VoiceNavigation.AddClass',
+        passProps: {
+          text: 'Pushed screen',
+        },
+        options: {
+          topBar: {
+            title: {
+              text: 'Pushed screen title',
+            },
+          },
+        },
+      },
+    });
     //
-    this.toggleModal();
+    // this.toggleModal();
     // setScheduleForToday({
     //   1: {
     //     title: 'odin',

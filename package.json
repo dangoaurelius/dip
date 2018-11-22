@@ -24,9 +24,12 @@
     "react-native-navigation": "1.1.471",
     "react-native-speech": "0.1.2",
     "react-native-voice": "0.2.6",
+    "react-redux": "5.1.1",
     "redux": "^4.0.1",
     "redux-act": "^1.7.4",
-    "redux-persist": "^5.10.0"
+    "redux-devtools-extension": "2.13.5",
+    "redux-persist": "^5.10.0",
+    "redux-saga": "^0.16.2"
   },
   "devDependencies": {
     "babel-eslint": "10.0.1",
