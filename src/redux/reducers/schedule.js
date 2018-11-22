@@ -1,5 +1,9 @@
 import { createReducer } from 'redux-act';
-import { setSchedule } from '../actions';
+import {
+  setSchedule,
+  editSchedule,
+  removeSchedule,
+} from '../actions';
 
 const initialState = { };
 
@@ -21,6 +25,18 @@ const scheduleReducer = createReducer({
       [day]: newDay,
     });
   },
+  [removeSchedule]: (state, payload) => {
+    const { day, classValue } = payload;
+    if (state[day]) {
+      return {
+        ...state,
+        [day]: {
+          ...state[day],
+          day: null,
+        }
+      };
+    }
+  }
 }, initialState);
 
 export default scheduleReducer;
