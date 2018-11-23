@@ -8,4 +8,5 @@ export default (store) => {
   // screens
   Navigation.registerComponent('VoiceNavigation.Map', () => MapScreen, store, Provider);
   Navigation.registerComponent('VoiceNavigation.AddClass', () => AddClassScreen, store, Provider);
+  Navigation.registerComponent('VoiceNavigation.EditClass', () => AddClassScreen, store, Provider);
 };

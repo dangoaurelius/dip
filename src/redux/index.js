@@ -27,5 +27,5 @@ const store = createStore(persistedReducer, middlewares);
 const persistor = persistStore(store);
 
 export { persistor };
-
+// persistor.purge();
 export default store;

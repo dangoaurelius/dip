@@ -21,6 +21,7 @@
     "react-native-drawer": "^2.5.1",
     "react-native-maps": "0.22.0",
     "react-native-maps-directions": "1.6.0",
+    "react-native-modal-dropdown": "0.6.2",
     "react-native-navigation": "1.1.471",
     "react-native-speech": "0.1.2",
     "react-native-voice": "0.2.6",

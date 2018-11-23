@@ -1,9 +1,11 @@
 /* eslint-disable no-underscore-dangle  */
 /* eslint-disable no-else-return */
 import MapViewDirections from 'react-native-maps-directions';
+import { Navigation } from 'react-native-navigation';
+import Drawer from 'react-native-drawer';
 import React, { Component } from 'react';
 import Voice from 'react-native-voice';
-import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
 import moment from 'moment';
 import {
   ActivityIndicator,
@@ -25,7 +27,6 @@ import {
   Speech,
   getInitialRegion,
   getCurrentDayName,
-  setScheduleForToday,
   getScheduleForToday,
   subscribeGeolocation,
   testPointWithLocation,
@@ -43,14 +44,18 @@ import {
   GOOGLE_API_KEY,
   HOUSINGS_TEXT,
   DIRECTION_LINE_COLOR,
-  opacityInterpolation,
-  translateYInterpolation,
 } from '../../constants';
+
+import DrawerComponent from './drawer';
+
+import { removeSchedule } from '../../redux/actions';
 
 import styles from './styles';
 
-const microphone = require('../../../assets/microphone.jpg');
+const walk = require('../../../assets/walk.png');
+const remove = require('../../../assets/delete.png');
 const menu = require('../../../assets/menu.png');
+const microphone = require('../../../assets/microphone.jpg');
 
 const isAndroid = Platform.OS === 'android';
 const MAP_PROFIDER = isAndroid ? PROVIDER_GOOGLE : undefined;
@@ -61,9 +66,17 @@ const ZNTU_TERRITORY_COORDS = [
   ZNTU_COORDS.territoryCoords.topRight,
 ];
 
+const drawerStyles = {
+  drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3 },
+  main: { paddingLeft: 3 },
+};
+
 let timeout;
 
-export default class App extends Component {
+@connect(state => ({ schedule: state.schedule }), {
+  removeScheduleAction: removeSchedule,
+})
+class App extends Component {
   static navigatorStyle = {
     navBarHidden: true,
   };
@@ -86,22 +99,6 @@ export default class App extends Component {
     Voice.onSpeechEnd = this.onSpeechEnd.bind(this);
   }
 
-  async componentWillMount() {
-    try {
-      const schedule = await getScheduleForToday();
-      if (schedule) {
-        this.setState({
-          schedule,
-          showScreen: true,
-        });
-      }
-      console.warn('schedule', schedule);
-    } catch (error) {
-      alert('Error read data from storage.');
-      console.warn(error);
-    }
-  }
-
   componentWillUnmount() {
     unsubscribeGeolocation();
     Voice.destroy().then(Voice.removeAllListeners);
@@ -118,56 +115,14 @@ export default class App extends Component {
     this.setState({ modalShow: !modalShow });
   }
 
+  onPressAddClass = () => {
+    const { navigator } = this.props;
+    navigator.push({ screen: 'VoiceNavigation.AddClass' });
+  }
+
   onMenuPress = () => {
-    Navigation.push(this.props.componentId, {
-      component: {
-        name: 'VoiceNavigation.AddClass',
-        passProps: {
-          text: 'Pushed screen',
-        },
-        options: {
-          topBar: {
-            title: {
-              text: 'Pushed screen title',
-            },
-          },
-        },
-      },
-    });
-    //
-    // this.toggleModal();
-    // setScheduleForToday({
-    //   1: {
-    //     title: 'odin',
-    //     class: 125,
-    //     timeStart: moment(),
-    //     timeOver: moment(),
-    //   },
-    //   2: {
-    //     title: 'dva',
-    //     class: 20,
-    //     timeStart: moment(),
-    //     timeOver: moment(),
-    //   },
-    //   3: {
-    //     title: 'tri',
-    //     class: 520,
-    //     timeStart: moment(),
-    //     timeOver: moment(),
-    //   },
-    //   4: {
-    //     title: 'chetire',
-    //     class: 529,
-    //     timeStart: moment(),
-    //     timeOver: moment(),
-    //   },
-    //   5: {
-    //     title: 'piat',
-    //     class: 498,
-    //     timeStart: moment(),
-    //     timeOver: moment(),
-    //   },
-    // });
+    this.toggleModal();
+    // this._drawer.open();
   }
 
   isNumber = (item) => {
@@ -368,22 +323,6 @@ export default class App extends Component {
       directionViewState: 0,
       isUserInZNTUTerritory: false,
     });
-  }
-
-  _getAnimatedStyle = () => {
-    const { directionViewState, animation } = this.state;
-    // Loading state
-    if (directionViewState === 1) {
-      return {
-        opacity: animation.interpolate(opacityInterpolation),
-      };
-    } else {
-      return {
-        transform: [
-          { TranslateY: animation.interpolate(translateYInterpolation) },
-        ],
-      };
-    }
   }
 
   _renderMapViewAttributes = () => {
@@ -612,36 +551,74 @@ export default class App extends Component {
     this.getInformation(['У', 'меня', 'вопрос', 'Я', 'ищу', '320', 'аудиторию']); // 164 , 320
   };
 
+  _getTimeForClass = (classValue) => {
+    switch (classValue) {
+      case 2:
+        return ({ timeStart: '10:05', timeOver: '11:25' });
+      case 3:
+        return ({ timeStart: '11:55', timeOver: '13:15' });
+      case 4:
+        return ({ timeStart: '13:25', timeOver: '14:45' });
+      case 5:
+        return ({ timeStart: '14:55', timeOver: '16:15' });
+      case 6:
+      return ({ timeStart: '16:25', timeOver: '17:45' });
+      case 1:
+      default:
+       return ({ timeStart: '8:30', timeOver: '9:50' });
+    }
+  }
+
+  _onPressRemove = (day, classValue) => {
+    const { removeScheduleAction } = this.props;
+    removeScheduleAction({ day, classValue });
+  }
+
   _renderScheduleClass = (item, index) => {
-    const { timeStart, timeOver, title } = item;
+    const {
+      day,
+      title,
+      // auditory,
+      classValue,
+    } = item;
+
+    const timeData = this._getTimeForClass(classValue);
     return (
-      <View key={`key-index-${index}`} style={styles.classInfoContainer}>
-        <Text style={{ width: '15%', fontSize: 10, }}>
-          {item.class}
+      <View
+        key={`key-index-${index}`}
+        style={styles.classInfoContainer}
+      >
+        <Text style={{ width: '10%', fontSize: 10 }}>
+          {classValue}
         </Text>
-        <Text style={{ flex: 1, fontSize: 10, }}>
-          {title}
+        <Text style={{ flex: 1, fontSize: 10 }}>
+          {title} {item.auditory}
         </Text>
-        <Text style={{ width: '20%', fontSize: 10, }}>
-          {moment(timeStart).format('h:mm')}
+        <Text style={{ width: '35%', fontSize: 10 }}>
+          {timeData.timeStart}-{timeData.timeOver}
         </Text>
-        <Text style={{ width: '20%', fontSize: 10, }}>
-          {moment(timeOver).format('h:mm')}
-        </Text>
-        <Text
-          onPress={() => this.onPressGPS(auditory[item.class].housing, item.class)}
-          style={{ width: '20%', fontSize: 10, }}
-        >
-          Маршрут
-        </Text>
+        <TouchableOpacity onPress={() => this.onPressGPS(auditory[classValue].housing, classValue)}>
+          <Image
+            source={walk}
+            resizeMode={'contain'}
+            style={{ height: 20, width: 20 }}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => this._onPressRemove(day, classValue)}>
+          <Image
+            source={remove}
+            resizeMode={'contain'}
+            style={{ height: 20, width: 20 }}
+          />
+        </TouchableOpacity>
       </View>
     );
   }
 
   _renderScheduleModal = () => {
-    const { schedule } = this.state;
+    const { schedule } = this.props;
     if (schedule) {
-      const tmp = Object.entries(schedule);
+      const scheduleForToday = schedule[moment().isoWeekday()];
       return (
         <View style={styles.modalContainer}>
           <View style={styles.modalBody}>
@@ -650,31 +627,15 @@ export default class App extends Component {
             </View>
             <View style={styles.scheduleContainer}>
               <ScrollView>
-                <View style={styles.classInfoContainer}>
-                  <Text style={{ width: '15%', fontSize: 12, }}>
-                    Ауд.
-                  </Text>
-                  <Text style={{ flex: 1, fontSize: 12, }}>
-                    Название
-                  </Text>
-                  <Text style={{ width: '20%', fontSize: 12, }}>
-                    Начало
-                  </Text>
-                  <Text style={{ width: '20%', fontSize: 12, }}>
-                    Конец
-                  </Text>
-                  <Text style={{ width: '20%', fontSize: 12, }}>
-                    Геолок.
-                  </Text>
-                </View>
-                {tmp.map((item, index) => (this._renderScheduleClass(item[1], index)))}
+                {scheduleForToday
+                  && Object.entries(scheduleForToday).map((item, index) => (this._renderScheduleClass(item[1], index)))}
               </ScrollView>
             </View>
             <View style={styles.saveButtonContainer}>
               <TouchableOpacity onPress={this.toggleModal}>
                 <View style={styles.saveButton}>
                   <Text>
-                    Закрить
+                    Закрыть
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -697,33 +658,50 @@ export default class App extends Component {
     const { modalShow, started, directionViewState } = this.state;
 
     return (
-      <View style={styles.container}>
-        <View style={styles.viewMicrophoneImage}>
-          {/* <TouchableOpacity onPress={this._startRecognizing} style={styles.touchableOpacityMicrophoneImage}> */}
-          <TouchableOpacity
-            onPress={this.__debugOnClick}
-            style={styles.touchableOpacityMicrophoneImage}
-          >
-            <Image source={microphone} style={styles.microphoneImage} resizeMode="contain" />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.menu}>
-          <TouchableOpacity onPress={this.onMenuPress}>
-            <Image
-              source={menu}
-              style={styles.menuImage}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.viewText}>
-          {started && this._renderText(this.state.results[0])}
-        </View>
-        <View style={styles.viewText}>
-          {started && this._renderText(this.state.partialResults[0])}
-        </View>
-        {(directionViewState !== 0) && this._renderMapView()}
-        {modalShow && this._renderScheduleModal()}
-      </View>
+      <Drawer
+        type="overlay"
+        content={
+          <DrawerComponent
+            onPressAdd={this.onPressAddClass}
+            closeDrawer={() => this._drawer.close()}
+          />
+        }
+        openDrawerOffset={0}
+        closedDrawerOffset={0}
+        styles={drawerStyles}
+        ref={(ref) => { this._drawer = ref; }}
+        tweenHandler={Drawer.tweenPresets.parallax}
+      >
+        <View style={styles.container}>
+          <View style={styles.viewMicrophoneImage}>
+            {/* <TouchableOpacity onPress={this._startRecognizing} style={styles.touchableOpacityMicrophoneImage}> */}
+            <TouchableOpacity
+              onPress={this.__debugOnClick}
+              style={styles.touchableOpacityMicrophoneImage}
+              >
+                <Image source={microphone} style={styles.microphoneImage} resizeMode="contain" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.menu}>
+              <TouchableOpacity onPress={this.onMenuPress}>
+                <Image
+                  source={menu}
+                  style={styles.menuImage}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.viewText}>
+              {started && this._renderText(this.state.results[0])}
+            </View>
+            <View style={styles.viewText}>
+              {started && this._renderText(this.state.partialResults[0])}
+            </View>
+            {(directionViewState !== 0) && this._renderMapView()}
+            {modalShow && this._renderScheduleModal()}
+          </View>
+      </Drawer>
     );
   }
 }
+
+export default App;

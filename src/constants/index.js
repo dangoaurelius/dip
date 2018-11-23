@@ -5,6 +5,16 @@ export * from './animationInterpolation';
 export const GOOGLE_MAPS_URL = 'https://www.google.com/maps/embed/v1/directions';
 export const GOOGLE_API_KEY = 'AIzaSyA-VLCarDVR316nzG2L4hZ8Vh5wvBPViiA';
 
+export const days = {
+  1: 'Понедельник',
+  2: 'Вторник',
+  3: 'Среда',
+  4: 'Четверг',
+  5: 'Пятница',
+  6: 'Суббота',
+  7: 'Воскресенье',
+};
+
 export const FLOORS = {
   1: 'первый',
   2: 'второй',

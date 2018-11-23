@@ -34,6 +34,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightblue',
     borderRadius: 5,
   },
+  rowContainer: {
+    alignSelf: 'stretch',
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    alignItems: 'center',
+  },
+  buttonContainer: {
+    width: '100%',
+    alignItems: 'center',
+    paddingVertical: 25,
+  },
 });
 
 export default styles;

@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+import ModalDropdown from 'react-native-modal-dropdown';
 import React, { Component } from 'react';
 import {
   TouchableOpacity,
@@ -12,14 +13,37 @@ import {
   Text,
 } from 'react-native';
 
+import { days } from '../../constants';
+
 import styles from './styles';
 
 class AddClassScreen extends Component {
+  onPickDay = (item) => {
+    const { onValueChange } = this.props;
+    onValueChange('dayValue', Number(item) + 1);
+  }
+
+  renderDayDropdownValue = () => {
+    const { getValue } = this.props;
+    return (
+      <View style={{
+        alignSelf: 'stretch', paddingVertical: 10, justifyContent: 'center',
+      }}>
+        <Text>{days[getValue('dayValue')]}</Text>
+      </View>
+    );
+  }
+
   render() {
     const {
       getValue,
       onPressAdd,
+      dayOptions,
+      classOptions,
       onValueChange,
+      housingOptions,
+      auditoryOptions,
+      getAuditoryList,
     } = this.props;
     return (
       <View style={{ flex: 1 }}>
@@ -35,34 +59,63 @@ class AddClassScreen extends Component {
             onChangeText={value => onValueChange('title', value)}
             value={getValue('title')}
           />
-          <TextInput
-            placeholder={'Номер занятия (1 - 9)'}
-            style={styles.textInput}
-            onChangeText={value => onValueChange('classValue', value)}
-            value={getValue('classValue')}
+          <ModalDropdown
+             options={classOptions}
+             defaultIndex={1}
+             onSelect={value => onValueChange('classValue', Number(value) + 1)}
+             style={{ alignSelf: 'stretch', marginTop: 20 }}
+             dropdownStyle={{ width: 200 }}
+             renderRow={item => (
+               <View style={{
+                 alignSelf: 'stretch', paddingVertical: 10, paddingHorizontal: 10, alignItems: 'center',
+               }}>
+                 <Text>{item}</Text>
+               </View>
+             )}
           />
-          <TextInput
-            placeholder={'Номер аудитории'}
-            style={styles.textInput}
-            onChangeText={value => onValueChange('auditoryValue', value)}
-            value={getValue('auditoryValue')}
+          <ModalDropdown
+             options={housingOptions}
+             defaultIndex={1}
+             onSelect={value => onValueChange('housingValue', Number(value) + 1)}
+             style={{ alignSelf: 'stretch', marginTop: 20 }}
+             dropdownStyle={{ width: 200 }}
+             renderRow={item => (
+               <View style={styles.rowContainer}>
+                 <Text>Корпус {item}</Text>
+               </View>
+             )}
+          />
+          <ModalDropdown
+             disabled={!getValue('housingValue')}
+             options={getAuditoryList(getValue('housingValue'))}
+             defaultIndex={1}
+             onSelect={value => onValueChange('auditoryValue', Number(value) + 1)}
+             style={{ alignSelf: 'stretch', marginTop: 20 }}
+             dropdownStyle={{ width: 200 }}
+             renderRow={item => (
+               <View style={styles.rowContainer}>
+                 <Text>Аудитория {item}</Text>
+               </View>
+             )}
           />
           <View style={{ width: '100%', height: 40 }}>
-            <Picker
-              selectedValue={getValue('dayValue')}
-              style={{ height: 40, width: '100%' }}
-              onValueChange={value => onValueChange('dayValue', value)}
+            <ModalDropdown
+               options={dayOptions}
+               defaultIndex={1}
+               onSelect={this.onPickDay}
+               style={{ alignSelf: 'stretch', marginTop: 20 }}
+               dropdownStyle={{ width: 200 }}
+               renderRow={item => (
+                 <View style={styles.rowContainer}>
+                   <Text>{item.title}</Text>
+                 </View>
+               )}
             >
-              <Picker.Item label="Понедельник" value="1" />
-              <Picker.Item label="Вторник" value="2" />
-              <Picker.Item label="Среда" value="3" />
-              <Picker.Item label="Четверг" value="4" />
-              <Picker.Item label="Пятница" value="5" />
-              <Picker.Item label="Суббота" value="6" />
-            </Picker>
+              {this.renderDayDropdownValue()}
+            </ModalDropdown>
           </View>
         </View>
-        <View style={{ width: '100%', alignItems: 'center', paddingVertical: 25, }}>
+        <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={onPressAdd}>
             <View style={styles.addButtonContainer}>
               <Text>

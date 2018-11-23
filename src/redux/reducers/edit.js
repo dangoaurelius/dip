@@ -1,13 +1,12 @@
 import { createReducer } from 'redux-act';
 import {
-  setSchedule,
-  removeSchedule,
+  setEditSchedule,
 } from '../actions';
 
 const initialState = { };
 
 const scheduleReducer = createReducer({
-  [setSchedule]: (state, payload) => {
+  [setEditSchedule]: (state, payload) => {
     const { day, classValue } = payload;
     let newDay = {};
     if (state[day]) {
@@ -23,15 +22,6 @@ const scheduleReducer = createReducer({
       ...state,
       [day]: newDay,
     });
-  },
-  [removeSchedule]: (state, payload) => {
-    const { day, classValue } = payload;
-    if (state[day]) {
-      const newState = { ...state };
-      delete newState[day][classValue];
-      return newState;
-    }
-    return state;
   },
 }, initialState);
 

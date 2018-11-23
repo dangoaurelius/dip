@@ -1,15 +1,7 @@
 import { AsyncStorage } from 'react-native';
 import moment from 'moment';
 
-const days = {
-  1: 'Понедельник',
-  2: 'Вторник',
-  3: 'Среда',
-  4: 'Четверг',
-  5: 'Пятница',
-  6: 'Суббота',
-  7: 'Воскресенье',
-};
+import { days } from '../constants';
 
 export const setSchedule = async (scheduleObject) => {
   try {
@@ -25,11 +17,9 @@ export const setSchedule = async (scheduleObject) => {
 export const getSchedule = async () => {
   try {
     const value = await AsyncStorage.getItem('voiceNavigation@schedule');
-    console.warn(value);
     return JSON.parse(value);
   } catch (error) {
     // Error retrieving data
-    console.warn(error);
     return null;
   }
 };
@@ -49,7 +39,6 @@ export const getScheduleForToday = async () => {
 
 export const setScheduleForToday = async (newSchedule) => {
   const currentDay = getCurrentDay();
-  console.warn('currentDay', currentDay);
   try {
     const schedule = await getSchedule();
     let currentSchedule = {};
@@ -58,7 +47,6 @@ export const setScheduleForToday = async (newSchedule) => {
     }
     currentSchedule[currentDay] = newSchedule;
     await setSchedule(currentSchedule);
-    console.warn(currentDay, schedule, currentSchedule);
   } catch (error) {
     console.warn(error);
   }

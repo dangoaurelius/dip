@@ -61,6 +61,8 @@ const styles = StyleSheet.create({
   classInfoContainer: {
     flexDirection: 'row',
     height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modalBody: {
     flex: 1,
