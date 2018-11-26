@@ -53,7 +53,7 @@ class AddClassContainer extends Component {
         title,
         classValue,
         day: dayValue,
-        auditory: auditoryValue,
+        auditory: Object.entries(auditory)[auditoryValue][0],
       },
     );
     this.setState({

@@ -48,7 +48,7 @@ import {
 
 import DrawerComponent from './drawer';
 
-import { removeSchedule } from '../../redux/actions';
+import { removeSchedule, setEditSchedule } from '../../redux/actions';
 
 import styles from './styles';
 
@@ -75,6 +75,7 @@ let timeout;
 
 @connect(state => ({ schedule: state.schedule }), {
   removeScheduleAction: removeSchedule,
+  setEditScheduleAction: setEditSchedule,
 })
 class App extends Component {
   static navigatorStyle = {
@@ -121,8 +122,19 @@ class App extends Component {
   }
 
   onMenuPress = () => {
+    // const { navigator } = this.props;
+    // navigator.push({ screen: 'VoiceNavigation.AddClass' });
     this.toggleModal();
     // this._drawer.open();
+  }
+
+  onPressEdit = (item) => {
+    const {
+      navigator,
+      setEditScheduleAction,
+    } = this.props;
+    setEditScheduleAction(item);
+    navigator.push({ screen: 'VoiceNavigation.EditClass' });
   }
 
   isNumber = (item) => {
@@ -578,7 +590,6 @@ class App extends Component {
     const {
       day,
       title,
-      // auditory,
       classValue,
     } = item;
 
@@ -588,15 +599,20 @@ class App extends Component {
         key={`key-index-${index}`}
         style={styles.classInfoContainer}
       >
-        <Text style={{ width: '10%', fontSize: 10 }}>
-          {classValue}
-        </Text>
-        <Text style={{ flex: 1, fontSize: 10 }}>
-          {title} {item.auditory}
-        </Text>
-        <Text style={{ width: '35%', fontSize: 10 }}>
-          {timeData.timeStart}-{timeData.timeOver}
-        </Text>
+        <TouchableOpacity
+          onPress={() => this.onPressEdit(item)}
+          style={{ flex: 1, flexDirection: 'row' }}
+        >
+          <Text style={{ width: 30, fontSize: 10 }}>
+            {classValue}
+          </Text>
+          <Text style={{ flex: 1, fontSize: 10 }}>
+            {title} {item.auditory}
+          </Text>
+          <Text style={{ fontSize: 10 }}>
+            {timeData.timeStart}-{timeData.timeOver}
+          </Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => this.onPressGPS(auditory[classValue].housing, classValue)}>
           <Image
             source={walk}
@@ -662,11 +678,12 @@ class App extends Component {
         type="overlay"
         content={
           <DrawerComponent
+            onPressOpenSchedule={this.toggleModal}
             onPressAdd={this.onPressAddClass}
             closeDrawer={() => this._drawer.close()}
           />
         }
-        openDrawerOffset={0}
+        openDrawerOffset={0.2}
         closedDrawerOffset={0}
         styles={drawerStyles}
         ref={(ref) => { this._drawer = ref; }}
@@ -678,7 +695,7 @@ class App extends Component {
             <TouchableOpacity
               onPress={this.__debugOnClick}
               style={styles.touchableOpacityMicrophoneImage}
-              >
+            >
                 <Image source={microphone} style={styles.microphoneImage} resizeMode="contain" />
               </TouchableOpacity>
             </View>

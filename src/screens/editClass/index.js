@@ -32,7 +32,7 @@ class EditClassContainer extends Component {
       },
     } = this.props;
 
-    removeScheduleAction({ day: 1, classValue: 1 });
+    removeScheduleAction({ day, classValue });
     setScheduleAction({
       day,
       title,
