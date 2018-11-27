@@ -122,6 +122,11 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
+
+  drawerMenuContainer: {
+    marginVertical: 10,
+    marginHorizontal: 5,
+  },
 });
 
 export default styles;

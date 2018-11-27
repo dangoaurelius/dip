@@ -20,19 +20,18 @@ class EditClassContainer extends Component {
     navBarHidden: true,
   };
 
-  onPressSave = () => {
+  onPressSave = (data) => {
     const {
       setScheduleAction,
       removeScheduleAction,
-      edit: {
-        day,
-        title,
-        auditory,
-        classValue,
-      },
     } = this.props;
+    const {
+      day,
+      title,
+      auditory,
+      classValue,
+    } = data;
 
-    removeScheduleAction({ day, classValue });
     setScheduleAction({
       day,
       title,
@@ -46,6 +45,7 @@ class EditClassContainer extends Component {
     return (
       <EditClassScreen
         data={edit}
+        onPressSave={this.onPressSave}
       />
     );
   }

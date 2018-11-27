@@ -1,6 +1,11 @@
 /* eslint-disable no-alert */
+/* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Voice from 'react-native-voice';
+import {
+  Platform,
+} from 'react-native';
 
 import {
   setSchedule,
@@ -22,6 +27,8 @@ const dayOptions = [
 const housingOptions = [1, 2, 3, 4, 5];
 const classOptions = [1, 2, 3, 4, 5, 6];
 
+let timeout;
+
 @connect(state => ({
   scheduleState: state.schedule,
 }), {
@@ -32,11 +39,69 @@ class AddClassContainer extends Component {
     navBarHidden: true,
   };
 
-  state = {
-    title: '',
-    dayValue: 1,
-    classValue: '',
-    auditoryValue: '',
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: '',
+      dayValue: 1,
+      classValue: '',
+      auditoryValue: '',
+    };
+    Voice.onSpeechResults = this.onSpeechResults.bind(this);
+    Voice.onSpeechPartialResults = this.onSpeechPartialResults.bind(this);
+    Voice.onSpeechEnd = this.onSpeechEnd.bind(this);
+  }
+
+  componentWillUnmount() {
+    Voice.destroy().then(Voice.removeAllListeners);
+  }
+
+  onSpeechEnd = () => {
+    const words = this.state.results[0].split(/ |-/);
+    this.setState({ words });
+    this.getInformation(words);
+  }
+
+  onSpeechResults(e) {
+    this.setState({ results: e.value });
+
+    if (Platform.OS === 'ios') {
+      this.silentVoiceStop();
+    }
+  }
+
+  onSpeechPartialResults(e) {
+    this.setState({ partialResults: e.value });
+  }
+
+  silentVoiceStop = () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      this._stopRecognizing();
+    }, 3000);
+  }
+
+  _startRecognizing = async (e) => {
+    this.setState({
+      started: true,
+      results: [],
+      partialResults: [],
+      words: [],
+    });
+    try {
+      await this._stopRecognizing();
+      await Voice.start('ru');
+    } catch (errorEvent) {
+      console.error(errorEvent);
+    }
+  }
+
+  _stopRecognizing = async (e) => {
+    try {
+      await Voice.stop();
+    } catch (errorEvent) {
+      console.error(errorEvent);
+    }
   }
 
   onPressAdd = () => {

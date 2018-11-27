@@ -6,8 +6,9 @@ import {
   Text,
 } from 'react-native';
 
-class DrawerComponent extends Component {
+import styles from './styles';
 
+class DrawerComponent extends Component {
   render() {
     const {
       onPressOpenSchedule,
@@ -15,14 +16,20 @@ class DrawerComponent extends Component {
       onPressAdd,
     } = this.props;
     return (
-      <View style={{ flex: 1, backgroundColor: 'lightgrey', paddingTop: 40, paddingHorizontal: 10, }}>
+      <View style={{ paddingTop: 40, paddingHorizontal: 10, }}>
         <TouchableOpacity style={{ alignItems: 'flex-end' }} onPress={closeDrawer}>
           <Text>Закрыть</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={onPressAdd}>
+        <TouchableOpacity
+          onPress={onPressAdd}
+          style={styles.drawerMenuContainer}
+        >
           <Text>Добавить расписание</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={onPressOpenSchedule}>
+        <TouchableOpacity
+          onPress={onPressOpenSchedule}
+          style={styles.drawerMenuContainer}
+        >
           <Text>Отрыть расписание</Text>
         </TouchableOpacity>
       </View>

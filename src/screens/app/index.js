@@ -1,7 +1,6 @@
 /* eslint-disable no-underscore-dangle  */
 /* eslint-disable no-else-return */
 import MapViewDirections from 'react-native-maps-directions';
-import { Navigation } from 'react-native-navigation';
 import Drawer from 'react-native-drawer';
 import React, { Component } from 'react';
 import Voice from 'react-native-voice';
@@ -48,6 +47,7 @@ import {
 
 import DrawerComponent from './drawer';
 
+import { days } from '../../constants';
 import { removeSchedule, setEditSchedule } from '../../redux/actions';
 
 import styles from './styles';
@@ -113,19 +113,18 @@ class App extends Component {
 
   toggleModal = () => {
     const { modalShow } = this.state;
+    this._drawer.close();
     this.setState({ modalShow: !modalShow });
   }
 
   onPressAddClass = () => {
     const { navigator } = this.props;
+    this._drawer.close();
     navigator.push({ screen: 'VoiceNavigation.AddClass' });
   }
 
   onMenuPress = () => {
-    // const { navigator } = this.props;
-    // navigator.push({ screen: 'VoiceNavigation.AddClass' });
-    this.toggleModal();
-    // this._drawer.open();
+    this._drawer.open();
   }
 
   onPressEdit = (item) => {
@@ -631,6 +630,23 @@ class App extends Component {
     );
   }
 
+  scheduleList = schedule => (
+    Object.entries(schedule).map((scheduleItem, scheduleIndex) => {
+      const itemsList = Object.entries(scheduleItem[1]);
+      if (itemsList.length) {
+        return (
+          <View key={scheduleIndex}>
+            <View style={styles.titleContainer}>
+              <Text>Расписание на {days[scheduleItem[0]]}</Text>
+            </View>
+            {Object.entries(scheduleItem[1]).map((item, index) => (this._renderScheduleClass(item[1], index)))}
+          </View>
+        );
+      }
+      return null;
+    })
+  )
+
   _renderScheduleModal = () => {
     const { schedule } = this.props;
     if (schedule) {
@@ -638,13 +654,10 @@ class App extends Component {
       return (
         <View style={styles.modalContainer}>
           <View style={styles.modalBody}>
-            <View style={styles.titleContainer}>
-              <Text>Расписание на {getCurrentDayName()}</Text>
-            </View>
+
             <View style={styles.scheduleContainer}>
               <ScrollView>
-                {scheduleForToday
-                  && Object.entries(scheduleForToday).map((item, index) => (this._renderScheduleClass(item[1], index)))}
+                {this.scheduleList(schedule)}
               </ScrollView>
             </View>
             <View style={styles.saveButtonContainer}>
@@ -683,11 +696,13 @@ class App extends Component {
             closeDrawer={() => this._drawer.close()}
           />
         }
-        openDrawerOffset={0.2}
-        closedDrawerOffset={0}
+        side={'right'}
+        tapToClose={true}
+        openDrawerOffset={0.2} // 20% gap on the right side of drawer
+        panCloseMask={0.2}
+        closedDrawerOffset={-3}
         styles={drawerStyles}
         ref={(ref) => { this._drawer = ref; }}
-        tweenHandler={Drawer.tweenPresets.parallax}
       >
         <View style={styles.container}>
           <View style={styles.viewMicrophoneImage}>
