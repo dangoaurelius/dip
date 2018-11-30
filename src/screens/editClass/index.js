@@ -20,6 +20,11 @@ class EditClassContainer extends Component {
     navBarHidden: true,
   };
 
+  onPressClose = () => {
+    const { navigator } = this.props;
+    navigator.pop();
+  }
+
   onPressSave = (data) => {
     const {
       setScheduleAction,
@@ -38,6 +43,7 @@ class EditClassContainer extends Component {
       auditory,
       classValue,
     });
+    this.onPressClose();
   }
 
   render() {
@@ -45,6 +51,7 @@ class EditClassContainer extends Component {
     return (
       <EditClassScreen
         data={edit}
+        onPressClose={this.onPressClose}
         onPressSave={this.onPressSave}
       />
     );

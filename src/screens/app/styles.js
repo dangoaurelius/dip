@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     flex: 1,
     ...Platform.select({
       ios: {
-        marginTop: 25,
+        paddingTop: 25,
       },
     }),
   },
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   },
   menu: {
     position: 'absolute',
-    top: 10,
+    top: 20,
     right: 20,
   },
   menuImage: {
@@ -51,6 +51,11 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 15,
+  },
+  titleText: {
+    fontSize: 18,
+    fontWeight: '500',
   },
   modalContainer: {
     ...StyleSheet.absoluteFillObject,
@@ -60,15 +65,17 @@ const styles = StyleSheet.create({
   },
   classInfoContainer: {
     flexDirection: 'row',
-    height: 30,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingVertical: 10,
+    marginBottom: 5,
+    marginHorizontal: 15,
   },
   modalBody: {
     flex: 1,
     backgroundColor: 'white',
     paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingVertical: 25,
     borderRadius: 3,
   },
   scheduleContainer: {
@@ -122,10 +129,46 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
-
   drawerMenuContainer: {
     marginVertical: 10,
     marginHorizontal: 5,
+  },
+  scheduleDayContainer: {
+    paddingBottom: 15,
+    marginBottom: 10,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: 'lightgray',
+  },
+  classMainInfoContainer: {
+    // alignSelf: 'stre',
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  classValueText: {
+    fontSize: 14,
+    marginRight: 10,
+    fontWeight: 'bold',
+  },
+  gpsIconContainer: {
+    marginHorizontal: 10,
+  },
+  classTimeText: {
+    fontSize: 12,
+  },
+  titleHousingInfoContainer: {
+    flex: 1,
+    paddingRight: 5,
+  },
+  classTitleText: {
+    fontSize: 14,
+  },
+  auditoryHousingText: {
+    fontSize: 10,
+  },
+  iconImage: {
+    height: 20,
+    width: 20,
   },
 });
 

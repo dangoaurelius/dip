@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import {
   TouchableOpacity,
   TextInput,
+  Image,
   View,
   Text,
 } from 'react-native';
@@ -11,6 +12,8 @@ import {
 import { days } from '../../constants';
 
 import styles from './styles';
+
+const back = require('../../../assets/back.png');
 
 class EditClassScreen extends Component {
   constructor(props) {
@@ -33,26 +36,50 @@ class EditClassScreen extends Component {
   }
 
   render() {
-    const { onPressSave } = this.props;
+    const {
+      onPressSave,
+      onPressClose
+    } = this.props;
     const { day, title, classValue, auditory } = this.state;
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <View style={styles.titleContainer}>
+          <TouchableOpacity
+            onPress={onPressClose}
+            style={{ alignSelf: 'flex-start', paddingLeft: 10 }}
+          >
+            <Image
+              style={{ height: 25, width: 25 }}
+              source={back}
+            />
+          </TouchableOpacity>
           <Text style={styles.title}>
             Изменить расписание
           </Text>
+          <View style={{ paddingLeft: 10, height: 25, width: 25 }} />
         </View>
         <View style={{ flex: 1, paddingHorizontal: 15 }}>
-          <View style={{ flexDirection: 'row' }}>
-            <Text>День: </Text>
-            <Text>
-              {days[day]}
-            </Text>
+          <View style={{ marginBottom: 30, flexDirection: 'row', justifyContent: 'space-around' }}>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={styles.grayText}>
+                {'День: '}
+              </Text>
+              <Text style={styles.grayText}>
+                {days[day]}
+              </Text>
+            </View>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={styles.grayText}>
+                {'Занятие: '}
+              </Text>
+              <Text style={styles.grayText}>
+                {classValue}
+              </Text>
+            </View>
           </View>
-          <View style={{ flexDirection: 'row' }}>
-            <Text>Занятие: </Text>
-            <Text>{classValue}</Text>
-          </View>
+          <Text>
+            Название:
+          </Text>
           <TextInput
             value={this.state.title}
             onChangeText={text => this.setState({ title: text })}
@@ -87,7 +114,7 @@ class EditClassScreen extends Component {
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={() => onPressSave(this.state)}>
-            <View style={styles.addButtonContainer}>
+            <View style={styles.editButtonContainer}>
               <Text>
                 Сохранить
               </Text>

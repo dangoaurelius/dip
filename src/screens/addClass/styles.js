@@ -8,21 +8,32 @@ const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    width,
-    height,
+    flex: 1,
+    ...Platform.select({
+      ios: {
+        paddingTop: 25,
+      },
+      android: {
+        paddingTop: 10,
+      },
+    }),
   },
   titleContainer: {
     width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: '',
+    justifyContent: 'space-between',
     marginBottom: 20,
+    flexDirection: 'row',
   },
   title: {
-    fontSize: 26,
+    fontSize: 18,
+    alignSelf: 'center',
     textAlign: 'center',
   },
   textInput: {
     height: 40,
+    paddingVertical: 10,
+    color: 'rgb(80, 80, 80)',
     borderBottomColor: 'lightgrey',
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
@@ -44,6 +55,11 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     paddingVertical: 25,
+  },
+  dropdown: {
+    alignSelf: 'stretch',
+    paddingVertical: 5,
+    paddingLeft: 15,
   },
 });
 

@@ -5,7 +5,7 @@ import Drawer from 'react-native-drawer';
 import React, { Component } from 'react';
 import Voice from 'react-native-voice';
 import { connect } from 'react-redux';
-import moment from 'moment';
+
 import {
   ActivityIndicator,
   TouchableOpacity,
@@ -25,8 +25,6 @@ import MapView, {
 import {
   Speech,
   getInitialRegion,
-  getCurrentDayName,
-  getScheduleForToday,
   subscribeGeolocation,
   testPointWithLocation,
   unsubscribeGeolocation,
@@ -34,6 +32,7 @@ import {
 } from 'AppUtils';
 
 import {
+  days,
   FLOORS,
   numbers,
   auditory,
@@ -47,7 +46,6 @@ import {
 
 import DrawerComponent from './drawer';
 
-import { days } from '../../constants';
 import { removeSchedule, setEditSchedule } from '../../redux/actions';
 
 import styles from './styles';
@@ -68,7 +66,7 @@ const ZNTU_TERRITORY_COORDS = [
 
 const drawerStyles = {
   drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3 },
-  main: { paddingLeft: 3 },
+  main: { paddingLeft: 0 },
 };
 
 let timeout;
@@ -573,10 +571,10 @@ class App extends Component {
       case 5:
         return ({ timeStart: '14:55', timeOver: '16:15' });
       case 6:
-      return ({ timeStart: '16:25', timeOver: '17:45' });
+        return ({ timeStart: '16:25', timeOver: '17:45' });
       case 1:
       default:
-       return ({ timeStart: '8:30', timeOver: '9:50' });
+        return ({ timeStart: '8:30', timeOver: '9:50' });
     }
   }
 
@@ -591,8 +589,9 @@ class App extends Component {
       title,
       classValue,
     } = item;
-
     const timeData = this._getTimeForClass(classValue);
+    const { housing } = auditory[item.auditory];
+
     return (
       <View
         key={`key-index-${index}`}
@@ -600,30 +599,43 @@ class App extends Component {
       >
         <TouchableOpacity
           onPress={() => this.onPressEdit(item)}
-          style={{ flex: 1, flexDirection: 'row' }}
+          style={styles.classMainInfoContainer}
         >
-          <Text style={{ width: 30, fontSize: 10 }}>
+          <Text style={styles.classValueText}>
             {classValue}
           </Text>
-          <Text style={{ flex: 1, fontSize: 10 }}>
-            {title} {item.auditory}
-          </Text>
-          <Text style={{ fontSize: 10 }}>
-            {timeData.timeStart}-{timeData.timeOver}
-          </Text>
+          <View style={styles.titleHousingInfoContainer}>
+            <Text style={styles.classTitleText}>
+              {title}
+            </Text>
+            <Text style={styles.auditoryHousingText}>
+              крп. {housing} ауд. {item.auditory}
+            </Text>
+          </View>
+          <View>
+            <Text style={styles.classTimeText}>
+             н. {timeData.timeStart}
+            </Text>
+            <Text style={styles.classTimeText}>
+             к. {timeData.timeOver}
+            </Text>
+          </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.onPressGPS(auditory[classValue].housing, classValue)}>
+        <TouchableOpacity
+          onPress={() => this.onPressGPS(item.auditory, classValue)}
+          style={styles.gpsIconContainer}
+        >
           <Image
             source={walk}
             resizeMode={'contain'}
-            style={{ height: 20, width: 20 }}
+            style={styles.iconImage}
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => this._onPressRemove(day, classValue)}>
           <Image
             source={remove}
             resizeMode={'contain'}
-            style={{ height: 20, width: 20 }}
+            style={styles.iconImage}
           />
         </TouchableOpacity>
       </View>
@@ -635,9 +647,17 @@ class App extends Component {
       const itemsList = Object.entries(scheduleItem[1]);
       if (itemsList.length) {
         return (
-          <View key={scheduleIndex}>
+          <View
+            key={scheduleIndex}
+            style={styles.scheduleDayContainer}
+          >
             <View style={styles.titleContainer}>
-              <Text>Расписание на {days[scheduleItem[0]]}</Text>
+              <Text style={styles.titleText}>
+                Расписание на
+              </Text>
+              <Text style={styles.titleText}>
+                {days[scheduleItem[0]]}
+              </Text>
             </View>
             {Object.entries(scheduleItem[1]).map((item, index) => (this._renderScheduleClass(item[1], index)))}
           </View>
@@ -650,11 +670,9 @@ class App extends Component {
   _renderScheduleModal = () => {
     const { schedule } = this.props;
     if (schedule) {
-      const scheduleForToday = schedule[moment().isoWeekday()];
       return (
         <View style={styles.modalContainer}>
           <View style={styles.modalBody}>
-
             <View style={styles.scheduleContainer}>
               <ScrollView>
                 {this.scheduleList(schedule)}
@@ -676,14 +694,19 @@ class App extends Component {
     return null;
   }
 
-  onPressGPS = (housing, className) => {
+  onPressGPS = (classAuditory, className) => {
+    const { housing, text } = auditory[classAuditory];
     this.setState(
       { modalShow: false },
-      () => this._onAuditoryRecognised(housing, className),
+      () => {
+        this._onAuditoryRecognised(housing, className);
+        Speech.speak(text);
+      },
     );
   }
 
   render() {
+    const { schedule } = this.props;
     const { modalShow, started, directionViewState } = this.state;
 
     return (
@@ -694,6 +717,7 @@ class App extends Component {
             onPressOpenSchedule={this.toggleModal}
             onPressAdd={this.onPressAddClass}
             closeDrawer={() => this._drawer.close()}
+            daySchduleData={schedule}
           />
         }
         side={'right'}

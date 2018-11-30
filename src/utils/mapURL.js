@@ -11,7 +11,7 @@ const getMapURL = (origin, destination) => {
 
   const isOriginString = typeof origin === 'string';
   const isDestString = typeof destination === 'string';
-  console.log(origin, destination);
+
   const originParam = isOriginString
     ? `origin=${origin}`
     : `origin=${origin.latitude},${origin.longitude}`;

@@ -29,11 +29,9 @@ const classOptions = [1, 2, 3, 4, 5, 6];
 
 let timeout;
 
-@connect(state => ({
-  scheduleState: state.schedule,
-}), {
-  addScheduleAction: setSchedule,
-})
+@connect(state => (
+{ scheduleState: state.schedule }),
+{ addScheduleAction: setSchedule })
 class AddClassContainer extends Component {
   static navigatorStyle = {
     navBarHidden: true,
@@ -104,28 +102,26 @@ class AddClassContainer extends Component {
     }
   }
 
-  onPressAdd = () => {
-    const {
-      title,
-      dayValue,
-      classValue,
-      auditoryValue,
-    } = this.state;
-    const { addScheduleAction } = this.props;
+  onPressClose = () => {
+    const { navigator } = this.props;
+    navigator.pop();
+  }
 
-    addScheduleAction(
-      {
-        title,
-        classValue,
-        day: dayValue,
-        auditory: Object.entries(auditory)[auditoryValue][0],
-      },
-    );
-    this.setState({
-      title: '',
-      classValue: '',
-      auditoryValue: '',
+  onPressAdd = () => {
+    const { addScheduleAction, navigator } = this.props;
+    const {
+      auditoryValue,
+      classValue,
+      dayValue,
+      title,
+    } = this.state;
+    addScheduleAction({
+      title,
+      classValue,
+      day: dayValue,
+      auditory: auditoryValue,
     });
+    navigator.pop();
   };
 
   getAuditoryList = (housing) => {
@@ -146,6 +142,7 @@ class AddClassContainer extends Component {
   render() {
     return (
       <AddClassScreen
+        onPressClose={this.onPressClose}
         getAuditoryList={this.getAuditoryList}
         housingOptions={housingOptions}
         classOptions={classOptions}

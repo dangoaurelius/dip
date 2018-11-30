@@ -1,3 +1,6 @@
+/**
+ * @providesModule AppConstants
+ */
 /* eslint-disable max-len */
 export * from './colors';
 export * from './animationInterpolation';
